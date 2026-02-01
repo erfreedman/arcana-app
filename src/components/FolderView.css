@@ -1,0 +1,120 @@
+.folder-view {
+  padding-bottom: var(--space-xl);
+}
+
+.folder-view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+}
+
+.folder-view-count {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+/* Empty folder state */
+.empty-folder {
+  text-align: center;
+  padding: var(--space-2xl) var(--space-lg);
+  background: var(--color-bg-elevated);
+  border: var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.empty-folder-icon {
+  color: var(--color-bronze);
+  margin-bottom: var(--space-lg);
+  opacity: 0.6;
+}
+
+.empty-folder h3 {
+  font-size: 1.1rem;
+  margin-bottom: var(--space-sm);
+}
+
+.empty-folder p {
+  max-width: 260px;
+  margin: 0 auto var(--space-lg);
+  font-size: 0.9rem;
+}
+
+/* Readings list */
+.readings-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.reading-item {
+  width: 100%;
+  padding: var(--space-lg);
+  text-align: left;
+  cursor: pointer;
+  background: var(--color-bg-elevated);
+  border: var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.reading-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.reading-item-header {
+  margin-bottom: var(--space-sm);
+}
+
+.reading-date {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-bronze);
+}
+
+.reading-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+
+.reading-card-chip {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+}
+
+.reading-preview {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin: 0 0 var(--space-md) 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.reading-item-footer {
+  padding-top: var(--space-sm);
+  border-top: var(--border-light);
+}
+
+.view-link {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  transition: color 0.2s ease;
+}
+
+.reading-item:hover .view-link {
+  color: var(--color-bronze);
+}

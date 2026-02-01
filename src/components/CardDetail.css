@@ -1,0 +1,140 @@
+.card-detail {
+  padding-bottom: var(--space-xl);
+}
+
+/* Hero Image */
+.card-detail-hero {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-lg);
+}
+
+.card-detail-image {
+  width: 200px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  background: var(--color-bg-secondary);
+}
+
+.card-detail-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Card Info */
+.card-detail-info {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.card-detail-type {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-bronze);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--space-xs);
+}
+
+.card-detail-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+/* Keywords */
+.card-detail-keywords {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.keywords-section h3 {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--space-sm);
+}
+
+.keywords-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.keyword {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  padding: var(--space-xs) 0;
+  border-bottom: var(--border-light);
+}
+
+.keywords-list.reversed .keyword {
+  color: var(--color-text-muted);
+}
+
+/* Notes Section */
+.card-detail-notes {
+  background: var(--color-bg-elevated);
+  border: var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.notes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-md);
+}
+
+.notes-header h2 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.notes-editor textarea {
+  margin-bottom: var(--space-md);
+}
+
+.notes-editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+.notes-display p {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.notes-empty {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.save-toast {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-success);
+  color: white;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease;
+}

@@ -1,0 +1,96 @@
+// Complete 78-card tarot deck based on Smith-Waite tradition
+export const TAROT_CARDS = [
+  // Major Arcana (0-21)
+  { id: 'major-00', name: 'The Fool', number: 0, type: 'major', keywords: ['New beginnings', 'Innocence', 'Spontaneity', 'Free spirit'], reversedKeywords: ['Recklessness', 'Risk-taking', 'Naivety', 'Foolishness'] },
+  { id: 'major-01', name: 'The Magician', number: 1, type: 'major', keywords: ['Manifestation', 'Willpower', 'Skill', 'Concentration'], reversedKeywords: ['Manipulation', 'Untapped talents', 'Deception', 'Illusion'] },
+  { id: 'major-02', name: 'The High Priestess', number: 2, type: 'major', keywords: ['Intuition', 'Mystery', 'Inner knowledge', 'The subconscious'], reversedKeywords: ['Secrets', 'Withdrawal', 'Silence', 'Hidden agendas'] },
+  { id: 'major-03', name: 'The Empress', number: 3, type: 'major', keywords: ['Abundance', 'Nurturing', 'Fertility', 'Nature'], reversedKeywords: ['Dependence', 'Smothering', 'Creative block', 'Emptiness'] },
+  { id: 'major-04', name: 'The Emperor', number: 4, type: 'major', keywords: ['Authority', 'Structure', 'Control', 'Fatherhood'], reversedKeywords: ['Tyranny', 'Rigidity', 'Domination', 'Inflexibility'] },
+  { id: 'major-05', name: 'The Hierophant', number: 5, type: 'major', keywords: ['Tradition', 'Conformity', 'Spiritual wisdom', 'Institutions'], reversedKeywords: ['Rebellion', 'Subversion', 'Freedom', 'Challenging the status quo'] },
+  { id: 'major-06', name: 'The Lovers', number: 6, type: 'major', keywords: ['Love', 'Harmony', 'Relationships', 'Choices'], reversedKeywords: ['Disharmony', 'Imbalance', 'Misalignment', 'Difficult choices'] },
+  { id: 'major-07', name: 'The Chariot', number: 7, type: 'major', keywords: ['Willpower', 'Determination', 'Victory', 'Control'], reversedKeywords: ['Lack of direction', 'Aggression', 'Obstacles', 'Defeat'] },
+  { id: 'major-08', name: 'Strength', number: 8, type: 'major', keywords: ['Courage', 'Patience', 'Inner strength', 'Compassion'], reversedKeywords: ['Self-doubt', 'Weakness', 'Insecurity', 'Raw emotion'] },
+  { id: 'major-09', name: 'The Hermit', number: 9, type: 'major', keywords: ['Soul-searching', 'Introspection', 'Inner guidance', 'Solitude'], reversedKeywords: ['Isolation', 'Loneliness', 'Withdrawal', 'Lost'] },
+  { id: 'major-10', name: 'Wheel of Fortune', number: 10, type: 'major', keywords: ['Change', 'Cycles', 'Destiny', 'Turning point'], reversedKeywords: ['Bad luck', 'Resistance to change', 'Breaking cycles', 'Setbacks'] },
+  { id: 'major-11', name: 'Justice', number: 11, type: 'major', keywords: ['Fairness', 'Truth', 'Cause and effect', 'Law'], reversedKeywords: ['Unfairness', 'Dishonesty', 'Lack of accountability', 'Injustice'] },
+  { id: 'major-12', name: 'The Hanged Man', number: 12, type: 'major', keywords: ['Surrender', 'New perspective', 'Letting go', 'Sacrifice'], reversedKeywords: ['Delays', 'Resistance', 'Stalling', 'Indecision'] },
+  { id: 'major-13', name: 'Death', number: 13, type: 'major', keywords: ['Transformation', 'Endings', 'Change', 'Transition'], reversedKeywords: ['Resistance to change', 'Stagnation', 'Decay', 'Fear of change'] },
+  { id: 'major-14', name: 'Temperance', number: 14, type: 'major', keywords: ['Balance', 'Moderation', 'Patience', 'Purpose'], reversedKeywords: ['Imbalance', 'Excess', 'Lack of long-term vision', 'Discord'] },
+  { id: 'major-15', name: 'The Devil', number: 15, type: 'major', keywords: ['Shadow self', 'Attachment', 'Addiction', 'Materialism'], reversedKeywords: ['Release', 'Breaking free', 'Reclaiming power', 'Detachment'] },
+  { id: 'major-16', name: 'The Tower', number: 16, type: 'major', keywords: ['Sudden change', 'Upheaval', 'Revelation', 'Awakening'], reversedKeywords: ['Avoiding disaster', 'Fear of change', 'Delayed destruction', 'Resisting transformation'] },
+  { id: 'major-17', name: 'The Star', number: 17, type: 'major', keywords: ['Hope', 'Faith', 'Renewal', 'Serenity'], reversedKeywords: ['Lack of faith', 'Despair', 'Disconnection', 'Discouragement'] },
+  { id: 'major-18', name: 'The Moon', number: 18, type: 'major', keywords: ['Illusion', 'Fear', 'Intuition', 'The unconscious'], reversedKeywords: ['Release of fear', 'Repressed emotions', 'Inner confusion', 'Clarity'] },
+  { id: 'major-19', name: 'The Sun', number: 19, type: 'major', keywords: ['Joy', 'Success', 'Vitality', 'Positivity'], reversedKeywords: ['Inner child', 'Temporary depression', 'Sadness', 'Lack of clarity'] },
+  { id: 'major-20', name: 'Judgement', number: 20, type: 'major', keywords: ['Reflection', 'Reckoning', 'Awakening', 'Rebirth'], reversedKeywords: ['Self-doubt', 'Refusal to learn', 'Self-loathing', 'Ignoring the call'] },
+  { id: 'major-21', name: 'The World', number: 21, type: 'major', keywords: ['Completion', 'Integration', 'Accomplishment', 'Travel'], reversedKeywords: ['Lack of closure', 'Incomplete', 'Emptiness', 'Shortcuts'] },
+
+  // Wands (1-14)
+  { id: 'wands-01', name: 'Ace of Wands', suit: 'Wands', number: 1, keywords: ['Inspiration', 'New opportunity', 'Growth', 'Potential'], reversedKeywords: ['Delays', 'Lack of direction', 'Missed opportunity', 'Creative blocks'] },
+  { id: 'wands-02', name: 'Two of Wands', suit: 'Wands', number: 2, keywords: ['Planning', 'Future vision', 'Decisions', 'Discovery'], reversedKeywords: ['Fear of unknown', 'Lack of planning', 'Playing safe', 'Impatience'] },
+  { id: 'wands-03', name: 'Three of Wands', suit: 'Wands', number: 3, keywords: ['Expansion', 'Foresight', 'Opportunity', 'Progress'], reversedKeywords: ['Obstacles', 'Delays', 'Frustration', 'Lack of foresight'] },
+  { id: 'wands-04', name: 'Four of Wands', suit: 'Wands', number: 4, keywords: ['Celebration', 'Harmony', 'Homecoming', 'Community'], reversedKeywords: ['Lack of support', 'Instability', 'Conflict', 'Unwelcoming'] },
+  { id: 'wands-05', name: 'Five of Wands', suit: 'Wands', number: 5, keywords: ['Competition', 'Conflict', 'Rivalry', 'Tension'], reversedKeywords: ['Avoiding conflict', 'Respecting differences', 'Inner conflict', 'Agreement'] },
+  { id: 'wands-06', name: 'Six of Wands', suit: 'Wands', number: 6, keywords: ['Victory', 'Recognition', 'Success', 'Public reward'], reversedKeywords: ['Excess pride', 'Fall from grace', 'Lack of recognition', 'Self-doubt'] },
+  { id: 'wands-07', name: 'Seven of Wands', suit: 'Wands', number: 7, keywords: ['Challenge', 'Perseverance', 'Defense', 'Maintaining position'], reversedKeywords: ['Giving up', 'Overwhelm', 'Yielding', 'Exhaustion'] },
+  { id: 'wands-08', name: 'Eight of Wands', suit: 'Wands', number: 8, keywords: ['Speed', 'Action', 'Movement', 'Quick decisions'], reversedKeywords: ['Delays', 'Frustration', 'Waiting', 'Slowing down'] },
+  { id: 'wands-09', name: 'Nine of Wands', suit: 'Wands', number: 9, keywords: ['Resilience', 'Persistence', 'Boundaries', 'Last stand'], reversedKeywords: ['Exhaustion', 'Giving up', 'Overwhelm', 'Paranoia'] },
+  { id: 'wands-10', name: 'Ten of Wands', suit: 'Wands', number: 10, keywords: ['Burden', 'Responsibility', 'Hard work', 'Accomplishment'], reversedKeywords: ['Burning out', 'Delegating', 'Release', 'Inability to delegate'] },
+  { id: 'wands-11', name: 'Page of Wands', suit: 'Wands', number: 11, keywords: ['Enthusiasm', 'Exploration', 'Free spirit', 'Discovery'], reversedKeywords: ['Lack of direction', 'Procrastination', 'Hasty decisions', 'Immaturity'] },
+  { id: 'wands-12', name: 'Knight of Wands', suit: 'Wands', number: 12, keywords: ['Energy', 'Passion', 'Adventure', 'Action'], reversedKeywords: ['Anger', 'Impulsiveness', 'Recklessness', 'Delays'] },
+  { id: 'wands-13', name: 'Queen of Wands', suit: 'Wands', number: 13, keywords: ['Courage', 'Confidence', 'Independence', 'Warmth'], reversedKeywords: ['Selfishness', 'Jealousy', 'Insecurity', 'Temperamental'] },
+  { id: 'wands-14', name: 'King of Wands', suit: 'Wands', number: 14, keywords: ['Leadership', 'Vision', 'Entrepreneur', 'Honor'], reversedKeywords: ['Impulsiveness', 'Haste', 'Ruthlessness', 'High expectations'] },
+
+  // Cups (1-14)
+  { id: 'cups-01', name: 'Ace of Cups', suit: 'Cups', number: 1, keywords: ['New love', 'Compassion', 'Creativity', 'Emotional beginning'], reversedKeywords: ['Blocked emotions', 'Emptiness', 'Emotional loss', 'Self-love'] },
+  { id: 'cups-02', name: 'Two of Cups', suit: 'Cups', number: 2, keywords: ['Partnership', 'Unity', 'Connection', 'Mutual attraction'], reversedKeywords: ['Imbalance', 'Broken communication', 'Tension', 'Disconnection'] },
+  { id: 'cups-03', name: 'Three of Cups', suit: 'Cups', number: 3, keywords: ['Celebration', 'Friendship', 'Community', 'Creativity'], reversedKeywords: ['Overindulgence', 'Gossip', 'Isolation', 'Independence'] },
+  { id: 'cups-04', name: 'Four of Cups', suit: 'Cups', number: 4, keywords: ['Contemplation', 'Apathy', 'Re-evaluation', 'Meditation'], reversedKeywords: ['Awareness', 'Acceptance', 'Moving on', 'Missed opportunity'] },
+  { id: 'cups-05', name: 'Five of Cups', suit: 'Cups', number: 5, keywords: ['Loss', 'Grief', 'Disappointment', 'Regret'], reversedKeywords: ['Acceptance', 'Moving on', 'Finding peace', 'Forgiveness'] },
+  { id: 'cups-06', name: 'Six of Cups', suit: 'Cups', number: 6, keywords: ['Nostalgia', 'Memories', 'Innocence', 'Reunion'], reversedKeywords: ['Living in past', 'Forgiveness', 'Moving forward', 'Stuck'] },
+  { id: 'cups-07', name: 'Seven of Cups', suit: 'Cups', number: 7, keywords: ['Fantasy', 'Choices', 'Wishful thinking', 'Illusion'], reversedKeywords: ['Clarity', 'Making choices', 'Alignment', 'Reality'] },
+  { id: 'cups-08', name: 'Eight of Cups', suit: 'Cups', number: 8, keywords: ['Walking away', 'Seeking truth', 'Leaving behind', 'Disappointment'], reversedKeywords: ['Fear of change', 'Stagnation', 'Avoidance', 'Drifting'] },
+  { id: 'cups-09', name: 'Nine of Cups', suit: 'Cups', number: 9, keywords: ['Contentment', 'Satisfaction', 'Gratitude', 'Wish fulfilled'], reversedKeywords: ['Dissatisfaction', 'Greed', 'Materialism', 'Unfulfillment'] },
+  { id: 'cups-10', name: 'Ten of Cups', suit: 'Cups', number: 10, keywords: ['Harmony', 'Family', 'Happiness', 'Alignment'], reversedKeywords: ['Broken family', 'Disconnection', 'Misalignment', 'Dysfunction'] },
+  { id: 'cups-11', name: 'Page of Cups', suit: 'Cups', number: 11, keywords: ['Creative opportunity', 'Intuition', 'Curiosity', 'Possibility'], reversedKeywords: ['Emotional immaturity', 'Insecurity', 'Escapism', 'Creative blocks'] },
+  { id: 'cups-12', name: 'Knight of Cups', suit: 'Cups', number: 12, keywords: ['Romance', 'Charm', 'Imagination', 'Following the heart'], reversedKeywords: ['Moodiness', 'Disappointment', 'Unrealistic', 'Jealousy'] },
+  { id: 'cups-13', name: 'Queen of Cups', suit: 'Cups', number: 13, keywords: ['Compassion', 'Calm', 'Intuitive', 'Emotional security'], reversedKeywords: ['Martyrdom', 'Insecurity', 'Dependence', 'Smothering'] },
+  { id: 'cups-14', name: 'King of Cups', suit: 'Cups', number: 14, keywords: ['Emotional balance', 'Diplomacy', 'Compassion', 'Wisdom'], reversedKeywords: ['Manipulation', 'Moodiness', 'Volatility', 'Emotional coldness'] },
+
+  // Swords (1-14)
+  { id: 'swords-01', name: 'Ace of Swords', suit: 'Swords', number: 1, keywords: ['Clarity', 'Breakthrough', 'New idea', 'Truth'], reversedKeywords: ['Confusion', 'Chaos', 'Lack of clarity', 'Brutality'] },
+  { id: 'swords-02', name: 'Two of Swords', suit: 'Swords', number: 2, keywords: ['Difficult choices', 'Stalemate', 'Denial', 'Avoidance'], reversedKeywords: ['Indecision', 'Information overload', 'Confusion', 'Overwhelm'] },
+  { id: 'swords-03', name: 'Three of Swords', suit: 'Swords', number: 3, keywords: ['Heartbreak', 'Sorrow', 'Grief', 'Painful truth'], reversedKeywords: ['Recovery', 'Forgiveness', 'Moving on', 'Release'] },
+  { id: 'swords-04', name: 'Four of Swords', suit: 'Swords', number: 4, keywords: ['Rest', 'Restoration', 'Contemplation', 'Recuperation'], reversedKeywords: ['Restlessness', 'Burnout', 'Lack of progress', 'Stagnation'] },
+  { id: 'swords-05', name: 'Five of Swords', suit: 'Swords', number: 5, keywords: ['Conflict', 'Defeat', 'Win at all costs', 'Betrayal'], reversedKeywords: ['Reconciliation', 'Making amends', 'Past resentment', 'Ending conflict'] },
+  { id: 'swords-06', name: 'Six of Swords', suit: 'Swords', number: 6, keywords: ['Transition', 'Moving on', 'Change', 'Rite of passage'], reversedKeywords: ['Emotional baggage', 'Unfinished business', 'Resistance', 'Turbulence'] },
+  { id: 'swords-07', name: 'Seven of Swords', suit: 'Swords', number: 7, keywords: ['Deception', 'Strategy', 'Stealth', 'Getting away with something'], reversedKeywords: ['Coming clean', 'Rethinking approach', 'Conscience', 'Confession'] },
+  { id: 'swords-08', name: 'Eight of Swords', suit: 'Swords', number: 8, keywords: ['Restriction', 'Isolation', 'Self-limiting beliefs', 'Imprisonment'], reversedKeywords: ['Self-acceptance', 'New perspective', 'Freedom', 'Release'] },
+  { id: 'swords-09', name: 'Nine of Swords', suit: 'Swords', number: 9, keywords: ['Anxiety', 'Worry', 'Fear', 'Nightmares'], reversedKeywords: ['Hope', 'Reaching out', 'Recovery', 'Inner turmoil'] },
+  { id: 'swords-10', name: 'Ten of Swords', suit: 'Swords', number: 10, keywords: ['Painful ending', 'Betrayal', 'Loss', 'Rock bottom'], reversedKeywords: ['Recovery', 'Regeneration', 'Resisting end', 'Survival'] },
+  { id: 'swords-11', name: 'Page of Swords', suit: 'Swords', number: 11, keywords: ['Curiosity', 'New ideas', 'Thirst for knowledge', 'Communication'], reversedKeywords: ['Deception', 'Manipulation', 'Gossip', 'All talk'] },
+  { id: 'swords-12', name: 'Knight of Swords', suit: 'Swords', number: 12, keywords: ['Action', 'Ambition', 'Drive', 'Determination'], reversedKeywords: ['Impatience', 'Scattered energy', 'Burnout', 'Recklessness'] },
+  { id: 'swords-13', name: 'Queen of Swords', suit: 'Swords', number: 13, keywords: ['Clear boundaries', 'Direct communication', 'Independence', 'Perception'], reversedKeywords: ['Coldness', 'Cruelty', 'Bitterness', 'Overly critical'] },
+  { id: 'swords-14', name: 'King of Swords', suit: 'Swords', number: 14, keywords: ['Mental clarity', 'Authority', 'Truth', 'Intellect'], reversedKeywords: ['Manipulation', 'Tyranny', 'Abuse of power', 'Cruelty'] },
+
+  // Pentacles (1-14)
+  { id: 'pentacles-01', name: 'Ace of Pentacles', suit: 'Pentacles', number: 1, keywords: ['New opportunity', 'Prosperity', 'Abundance', 'Manifestation'], reversedKeywords: ['Lost opportunity', 'Scarcity', 'Instability', 'Poor planning'] },
+  { id: 'pentacles-02', name: 'Two of Pentacles', suit: 'Pentacles', number: 2, keywords: ['Balance', 'Adaptability', 'Priorities', 'Time management'], reversedKeywords: ['Imbalance', 'Disorganization', 'Overwhelm', 'Financial mess'] },
+  { id: 'pentacles-03', name: 'Three of Pentacles', suit: 'Pentacles', number: 3, keywords: ['Teamwork', 'Collaboration', 'Building', 'Apprenticeship'], reversedKeywords: ['Lack of teamwork', 'Disharmony', 'Competition', 'Misalignment'] },
+  { id: 'pentacles-04', name: 'Four of Pentacles', suit: 'Pentacles', number: 4, keywords: ['Security', 'Conservation', 'Control', 'Stability'], reversedKeywords: ['Greed', 'Materialism', 'Possessiveness', 'Financial insecurity'] },
+  { id: 'pentacles-05', name: 'Five of Pentacles', suit: 'Pentacles', number: 5, keywords: ['Hardship', 'Loss', 'Isolation', 'Worry'], reversedKeywords: ['Recovery', 'Improvement', 'Positive changes', 'Spiritual poverty'] },
+  { id: 'pentacles-06', name: 'Six of Pentacles', suit: 'Pentacles', number: 6, keywords: ['Generosity', 'Charity', 'Sharing', 'Fairness'], reversedKeywords: ['Debt', 'Selfishness', 'One-sided charity', 'Strings attached'] },
+  { id: 'pentacles-07', name: 'Seven of Pentacles', suit: 'Pentacles', number: 7, keywords: ['Patience', 'Investment', 'Perseverance', 'Long-term view'], reversedKeywords: ['Impatience', 'Poor planning', 'Lack of reward', 'Wasted effort'] },
+  { id: 'pentacles-08', name: 'Eight of Pentacles', suit: 'Pentacles', number: 8, keywords: ['Apprenticeship', 'Mastery', 'Skill', 'Dedication'], reversedKeywords: ['Perfectionism', 'Lack of focus', 'Misdirected', 'Cutting corners'] },
+  { id: 'pentacles-09', name: 'Nine of Pentacles', suit: 'Pentacles', number: 9, keywords: ['Luxury', 'Self-sufficiency', 'Accomplishment', 'Independence'], reversedKeywords: ['Overworking', 'Superficiality', 'Hustling', 'Financial dependence'] },
+  { id: 'pentacles-10', name: 'Ten of Pentacles', suit: 'Pentacles', number: 10, keywords: ['Wealth', 'Inheritance', 'Family', 'Legacy'], reversedKeywords: ['Financial failure', 'Loneliness', 'Loss', 'Family disputes'] },
+  { id: 'pentacles-11', name: 'Page of Pentacles', suit: 'Pentacles', number: 11, keywords: ['Manifestation', 'Financial opportunity', 'New venture', 'Skill development'], reversedKeywords: ['Lack of progress', 'Procrastination', 'Missed chance', 'Unfocused'] },
+  { id: 'pentacles-12', name: 'Knight of Pentacles', suit: 'Pentacles', number: 12, keywords: ['Hard work', 'Responsibility', 'Persistence', 'Routine'], reversedKeywords: ['Laziness', 'Obsession', 'Boredom', 'Perfectionism'] },
+  { id: 'pentacles-13', name: 'Queen of Pentacles', suit: 'Pentacles', number: 13, keywords: ['Nurturing', 'Practical', 'Providing', 'Working parent'], reversedKeywords: ['Self-care', 'Work-home conflict', 'Smothering', 'Neglect'] },
+  { id: 'pentacles-14', name: 'King of Pentacles', suit: 'Pentacles', number: 14, keywords: ['Wealth', 'Business', 'Leadership', 'Security'], reversedKeywords: ['Greed', 'Materialism', 'Poor financial decisions', 'Stubbornness'] },
+];
+
+// Helper function to get cards by type
+export const getMajorArcana = () => TAROT_CARDS.filter(card => card.type === 'major');
+export const getMinorArcana = () => TAROT_CARDS.filter(card => card.suit);
+export const getCardsBySuit = (suit) => TAROT_CARDS.filter(card => card.suit === suit);
+export const getCardById = (id) => TAROT_CARDS.find(card => card.id === id);

@@ -1,0 +1,214 @@
+.readings-section {
+  padding-bottom: var(--space-xl);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+}
+
+.section-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: var(--space-2xl) var(--space-lg);
+  background: var(--color-bg-elevated);
+  border: var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.empty-icon {
+  color: var(--color-bronze);
+  margin-bottom: var(--space-lg);
+  opacity: 0.6;
+}
+
+.empty-state h3 {
+  font-size: 1.1rem;
+  margin-bottom: var(--space-sm);
+}
+
+.empty-state p {
+  max-width: 260px;
+  margin: 0 auto var(--space-lg);
+  font-size: 0.9rem;
+}
+
+/* Create folder form */
+.create-folder-form {
+  margin-bottom: var(--space-lg);
+  background: var(--color-bg-elevated);
+  border: var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.create-folder-form input {
+  margin-bottom: var(--space-md);
+}
+
+.create-folder-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.suggestions-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.suggestion-chip {
+  font-size: 0.75rem;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-xl);
+  background: var(--color-bg-secondary);
+  border: none;
+  color: var(--color-text-muted);
+}
+
+.suggestion-chip:hover {
+  background: var(--color-bg-primary);
+  color: var(--color-text-secondary);
+}
+
+.create-folder-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+/* Folder list */
+.folder-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.folder-item {
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  background: var(--color-bg-elevated);
+  border: var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.folder-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  text-align: left;
+}
+
+.folder-content:hover {
+  background: var(--color-bg-secondary);
+}
+
+.folder-icon {
+  color: var(--color-bronze);
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.folder-info {
+  flex: 1;
+}
+
+.folder-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.folder-count {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.folder-arrow {
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+.folder-actions {
+  display: flex;
+  border-left: var(--border-light);
+}
+
+.folder-action-btn {
+  width: 44px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  padding: 0;
+}
+
+.folder-action-btn:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+.folder-action-btn.delete:hover {
+  background: rgba(184, 84, 80, 0.1);
+  color: var(--color-danger);
+}
+
+/* Editing state */
+.folder-editing,
+.folder-deleting {
+  flex: 1;
+  padding: var(--space-md);
+}
+
+.folder-editing input {
+  margin-bottom: var(--space-sm);
+}
+
+.folder-editing-actions,
+.folder-deleting-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+.folder-deleting p {
+  margin-bottom: var(--space-md);
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  border: none;
+  color: white;
+}
+
+.btn-danger:hover {
+  opacity: 0.9;
+}
