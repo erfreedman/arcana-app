@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TAROT_CARDS, getMajorArcana, getCardsBySuit } from '../data/tarotCards';
+import { getMajorArcana, getCardsBySuit } from '../data/tarotCards';
 import './ReadingForm.css';
 
 function ReadingForm({ folderId, onSubmit, onCancel }) {
