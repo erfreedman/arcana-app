@@ -12,7 +12,7 @@ import ReadingForm from './components/ReadingForm';
 import { useSupabaseSync } from './hooks/useSupabaseSync';
 
 function AppContent() {
-  const { user, loading, signOut } = useAuth();
+  const { user, loading, signOut, isPasswordRecovery } = useAuth();
 
   // Navigation state
   const [activeTab, setActiveTab] = useState('library');
@@ -53,8 +53,8 @@ function AppContent() {
     );
   }
 
-  // Show auth page if not logged in
-  if (!user) {
+  // Show auth page if not logged in or if setting password
+  if (!user || isPasswordRecovery) {
     return <AuthPage />;
   }
 
