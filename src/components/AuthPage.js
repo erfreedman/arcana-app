@@ -28,7 +28,11 @@ function AuthPage() {
         setPassword('');
       }
     } catch (err) {
-      setError(err.message);
+      if (!isLogin) {
+        setError('Contact admin for an invite.');
+      } else {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }
