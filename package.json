@@ -4,6 +4,7 @@
   "description": "A mystical tarot reading journal PWA",
   "private": true,
   "dependencies": {
+    "@supabase/supabase-js": "^2.93.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",

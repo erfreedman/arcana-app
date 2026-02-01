@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Header from './components/Header';
 import Navigation from './components/Navigation';
 import CardLibrary from './components/CardLibrary';
@@ -7,12 +7,7 @@ import ReadingsSection from './components/ReadingsSection';
 import FolderView from './components/FolderView';
 import ReadingDetail from './components/ReadingDetail';
 import ReadingForm from './components/ReadingForm';
-
-const STORAGE_KEYS = {
-  CARD_NOTES: 'arcana-card-notes',
-  FOLDERS: 'arcana-folders',
-  READINGS: 'arcana-readings',
-};
+import { useSupabaseSync } from './hooks/useSupabaseSync';
 
 function App() {
   // Navigation state
@@ -22,84 +17,40 @@ function App() {
   const [selectedFolderId, setSelectedFolderId] = useState(null);
   const [selectedReadingId, setSelectedReadingId] = useState(null);
 
-  // Data state
-  const [cardNotes, setCardNotes] = useState({});
-  const [folders, setFolders] = useState([]);
-  const [readings, setReadings] = useState([]);
+  // Data from Supabase sync hook
+  const {
+    cardNotes,
+    folders,
+    readings,
+    isOnline,
+    isSyncing,
+    saveCardNotes,
+    createFolder,
+    renameFolder,
+    deleteFolder: deleteFolderFromDb,
+    createReading: createReadingInDb,
+    updateReading,
+    deleteReading: deleteReadingFromDb,
+  } = useSupabaseSync();
 
-  // Load data from localStorage on mount
-  useEffect(() => {
-    const savedNotes = localStorage.getItem(STORAGE_KEYS.CARD_NOTES);
-    const savedFolders = localStorage.getItem(STORAGE_KEYS.FOLDERS);
-    const savedReadings = localStorage.getItem(STORAGE_KEYS.READINGS);
-
-    if (savedNotes) setCardNotes(JSON.parse(savedNotes));
-    if (savedFolders) setFolders(JSON.parse(savedFolders));
-    if (savedReadings) setReadings(JSON.parse(savedReadings));
-  }, []);
-
-  // Save data to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.CARD_NOTES, JSON.stringify(cardNotes));
-  }, [cardNotes]);
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.FOLDERS, JSON.stringify(folders));
-  }, [folders]);
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.READINGS, JSON.stringify(readings));
-  }, [readings]);
-
-  // Card notes handlers
-  const saveCardNotes = (cardId, notes) => {
-    setCardNotes((prev) => ({
-      ...prev,
-      [cardId]: notes,
-    }));
-  };
-
-  // Folder handlers
-  const createFolder = (name) => {
-    const newFolder = {
-      id: Date.now().toString(),
-      name,
-      createdAt: new Date().toISOString(),
-    };
-    setFolders([...folders, newFolder]);
-    return newFolder;
-  };
-
-  const renameFolder = (folderId, newName) => {
-    setFolders(folders.map((f) => (f.id === folderId ? { ...f, name: newName } : f)));
-  };
-
-  const deleteFolder = (folderId) => {
-    setFolders(folders.filter((f) => f.id !== folderId));
-    setReadings(readings.filter((r) => r.folderId !== folderId));
+  // Wrapper for deleteFolder to handle view state
+  const deleteFolder = async (folderId) => {
+    await deleteFolderFromDb(folderId);
     if (selectedFolderId === folderId) {
       setCurrentView('main');
       setSelectedFolderId(null);
     }
   };
 
-  // Reading handlers
-  const createReading = (readingData) => {
-    const newReading = {
-      ...readingData,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
-    };
-    setReadings([newReading, ...readings]);
+  // Wrapper for createReading to handle view state
+  const createReading = async (readingData) => {
+    await createReadingInDb(readingData);
     setCurrentView('folderView');
   };
 
-  const updateReading = (readingId, updates) => {
-    setReadings(readings.map((r) => (r.id === readingId ? { ...r, ...updates } : r)));
-  };
-
-  const deleteReading = (readingId) => {
-    setReadings(readings.filter((r) => r.id !== readingId));
+  // Wrapper for deleteReading to handle view state
+  const deleteReading = async (readingId) => {
+    await deleteReadingFromDb(readingId);
     setCurrentView('folderView');
     setSelectedReadingId(null);
   };
@@ -170,6 +121,8 @@ function App() {
         title={getViewTitle()}
         showBack={showBack}
         onBack={handleBack}
+        isOnline={isOnline}
+        isSyncing={isSyncing}
       />
 
       {currentView === 'main' && (

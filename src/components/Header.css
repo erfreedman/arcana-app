@@ -69,3 +69,35 @@
 .header-spacer {
   width: 40px;
 }
+
+.header-status {
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sync-indicator {
+  color: var(--color-bronze);
+  display: flex;
+  align-items: center;
+}
+
+.sync-indicator .spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.offline-indicator {
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+}
