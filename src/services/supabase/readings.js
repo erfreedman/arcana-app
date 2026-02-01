@@ -1,23 +1,22 @@
 import { supabase } from './client';
-import { getDeviceId } from '../deviceId';
 
 export const readingsService = {
-  async getAll() {
+  async getAll(userId) {
     const { data, error } = await supabase
       .from('readings')
       .select('*')
-      .eq('device_id', getDeviceId())
+      .eq('user_id', userId)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
     return data.map(mapToLocalFormat);
   },
 
-  async create(reading) {
+  async create(reading, userId) {
     const { data, error } = await supabase
       .from('readings')
       .insert({
-        device_id: getDeviceId(),
+        user_id: userId,
         folder_id: reading.folderId,
         cards: reading.cards,
         interpretation: reading.interpretation,
@@ -32,7 +31,7 @@ export const readingsService = {
     return mapToLocalFormat(data);
   },
 
-  async update(id, updates) {
+  async update(id, updates, userId) {
     const updateData = {};
 
     if (updates.interpretation !== undefined) {
@@ -46,7 +45,7 @@ export const readingsService = {
       .from('readings')
       .update(updateData)
       .eq('id', id)
-      .eq('device_id', getDeviceId())
+      .eq('user_id', userId)
       .select()
       .single();
 
@@ -54,22 +53,22 @@ export const readingsService = {
     return mapToLocalFormat(data);
   },
 
-  async delete(id) {
+  async delete(id, userId) {
     const { error } = await supabase
       .from('readings')
       .delete()
       .eq('id', id)
-      .eq('device_id', getDeviceId());
+      .eq('user_id', userId);
 
     if (error) throw error;
   },
 
-  async deleteByFolderId(folderId) {
+  async deleteByFolderId(folderId, userId) {
     const { error } = await supabase
       .from('readings')
       .delete()
       .eq('folder_id', folderId)
-      .eq('device_id', getDeviceId());
+      .eq('user_id', userId);
 
     if (error) throw error;
   },

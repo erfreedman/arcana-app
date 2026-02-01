@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { foldersService, readingsService, cardNotesService } from '../services/supabase';
-import { migrateLocalStorageToSupabase, isMigrationComplete } from '../services/migration';
 
 const STORAGE_KEYS = {
   CARD_NOTES: 'arcana-card-notes',
@@ -9,7 +8,7 @@ const STORAGE_KEYS = {
   PENDING_OPS: 'arcana-pending-ops',
 };
 
-export function useSupabaseSync() {
+export function useSupabaseSync(userId) {
   const [cardNotes, setCardNotes] = useState({});
   const [folders, setFolders] = useState([]);
   const [readings, setReadings] = useState([]);
@@ -34,38 +33,48 @@ export function useSupabaseSync() {
     };
   }, []);
 
-  // Load data on mount
+  // Load data when userId changes
   useEffect(() => {
-    loadData();
-  }, []);
+    if (userId) {
+      loadData();
+    } else {
+      // Clear data when logged out
+      setCardNotes({});
+      setFolders([]);
+      setReadings([]);
+      setIsLoaded(false);
+    }
+  }, [userId]);
 
   // Sync when coming back online
   useEffect(() => {
-    if (isOnline && isLoaded) {
+    if (isOnline && isLoaded && userId) {
       processPendingOperations();
     }
-  }, [isOnline, isLoaded]);
+  }, [isOnline, isLoaded, userId]);
 
   // Auto-save to localStorage whenever state changes
   useEffect(() => {
-    if (isLoaded) {
+    if (isLoaded && userId) {
       localStorage.setItem(STORAGE_KEYS.CARD_NOTES, JSON.stringify(cardNotes));
     }
-  }, [cardNotes, isLoaded]);
+  }, [cardNotes, isLoaded, userId]);
 
   useEffect(() => {
-    if (isLoaded) {
+    if (isLoaded && userId) {
       localStorage.setItem(STORAGE_KEYS.FOLDERS, JSON.stringify(folders));
     }
-  }, [folders, isLoaded]);
+  }, [folders, isLoaded, userId]);
 
   useEffect(() => {
-    if (isLoaded) {
+    if (isLoaded && userId) {
       localStorage.setItem(STORAGE_KEYS.READINGS, JSON.stringify(readings));
     }
-  }, [readings, isLoaded]);
+  }, [readings, isLoaded, userId]);
 
   const loadData = async () => {
+    if (!userId) return;
+
     // First, load from localStorage (instant)
     const localNotes = JSON.parse(localStorage.getItem(STORAGE_KEYS.CARD_NOTES) || '{}');
     const localFolders = JSON.parse(localStorage.getItem(STORAGE_KEYS.FOLDERS) || '[]');
@@ -81,15 +90,10 @@ export function useSupabaseSync() {
       try {
         setIsSyncing(true);
 
-        // Run migration if needed
-        if (!isMigrationComplete()) {
-          await migrateLocalStorageToSupabase();
-        }
-
         const [remoteNotes, remoteFolders, remoteReadings] = await Promise.all([
-          cardNotesService.getAll(),
-          foldersService.getAll(),
-          readingsService.getAll(),
+          cardNotesService.getAll(userId),
+          foldersService.getAll(userId),
+          readingsService.getAll(userId),
         ]);
 
         // Use remote data (cloud is source of truth)
@@ -132,27 +136,31 @@ export function useSupabaseSync() {
   };
 
   const executeOperation = async (op) => {
+    if (!userId) return;
+
     switch (op.type) {
       case 'CREATE_FOLDER':
-        return await foldersService.create(op.data);
+        return await foldersService.create(op.data, userId);
       case 'UPDATE_FOLDER':
-        return await foldersService.update(op.id, op.data);
+        return await foldersService.update(op.id, op.data, userId);
       case 'DELETE_FOLDER':
-        return await foldersService.delete(op.id);
+        return await foldersService.delete(op.id, userId);
       case 'CREATE_READING':
-        return await readingsService.create(op.data);
+        return await readingsService.create(op.data, userId);
       case 'UPDATE_READING':
-        return await readingsService.update(op.id, op.data);
+        return await readingsService.update(op.id, op.data, userId);
       case 'DELETE_READING':
-        return await readingsService.delete(op.id);
+        return await readingsService.delete(op.id, userId);
       case 'UPSERT_NOTE':
-        return await cardNotesService.upsert(op.cardId, op.notes);
+        return await cardNotesService.upsert(op.cardId, op.notes, userId);
       default:
         console.warn('Unknown operation type:', op.type);
     }
   };
 
   const syncOperation = async (operation) => {
+    if (!userId) return;
+
     if (isOnline) {
       try {
         return await executeOperation(operation);
@@ -169,7 +177,7 @@ export function useSupabaseSync() {
   const saveCardNotes = useCallback(async (cardId, notes) => {
     setCardNotes((prev) => ({ ...prev, [cardId]: notes }));
     await syncOperation({ type: 'UPSERT_NOTE', cardId, notes });
-  }, [isOnline]);
+  }, [userId, isOnline]);
 
   // Folders
   const createFolder = useCallback(async (name) => {
@@ -188,20 +196,20 @@ export function useSupabaseSync() {
       return result;
     }
     return newFolder;
-  }, [isOnline]);
+  }, [userId, isOnline]);
 
   const renameFolder = useCallback(async (id, name) => {
     setFolders((prev) =>
       prev.map((f) => (f.id === id ? { ...f, name } : f))
     );
     await syncOperation({ type: 'UPDATE_FOLDER', id, data: { name } });
-  }, [isOnline]);
+  }, [userId, isOnline]);
 
   const deleteFolder = useCallback(async (id) => {
     setFolders((prev) => prev.filter((f) => f.id !== id));
     setReadings((prev) => prev.filter((r) => r.folderId !== id));
     await syncOperation({ type: 'DELETE_FOLDER', id });
-  }, [isOnline]);
+  }, [userId, isOnline]);
 
   // Readings
   const createReading = useCallback(async (readingData) => {
@@ -220,19 +228,19 @@ export function useSupabaseSync() {
       return result;
     }
     return newReading;
-  }, [isOnline]);
+  }, [userId, isOnline]);
 
   const updateReading = useCallback(async (id, updates) => {
     setReadings((prev) =>
       prev.map((r) => (r.id === id ? { ...r, ...updates } : r))
     );
     await syncOperation({ type: 'UPDATE_READING', id, data: updates });
-  }, [isOnline]);
+  }, [userId, isOnline]);
 
   const deleteReading = useCallback(async (id) => {
     setReadings((prev) => prev.filter((r) => r.id !== id));
     await syncOperation({ type: 'DELETE_READING', id });
-  }, [isOnline]);
+  }, [userId, isOnline]);
 
   return {
     // State

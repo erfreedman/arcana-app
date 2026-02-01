@@ -1,23 +1,22 @@
 import { supabase } from './client';
-import { getDeviceId } from '../deviceId';
 
 export const foldersService = {
-  async getAll() {
+  async getAll(userId) {
     const { data, error } = await supabase
       .from('folders')
       .select('*')
-      .eq('device_id', getDeviceId())
+      .eq('user_id', userId)
       .order('created_at', { ascending: true });
 
     if (error) throw error;
     return data.map(mapToLocalFormat);
   },
 
-  async create(folder) {
+  async create(folder, userId) {
     const { data, error } = await supabase
       .from('folders')
       .insert({
-        device_id: getDeviceId(),
+        user_id: userId,
         name: folder.name,
         local_id: folder.id,
         created_at: folder.createdAt,
@@ -29,14 +28,14 @@ export const foldersService = {
     return mapToLocalFormat(data);
   },
 
-  async update(id, updates) {
+  async update(id, updates, userId) {
     const { data, error } = await supabase
       .from('folders')
       .update({
         name: updates.name,
       })
       .eq('id', id)
-      .eq('device_id', getDeviceId())
+      .eq('user_id', userId)
       .select()
       .single();
 
@@ -44,12 +43,12 @@ export const foldersService = {
     return mapToLocalFormat(data);
   },
 
-  async delete(id) {
+  async delete(id, userId) {
     const { error } = await supabase
       .from('folders')
       .delete()
       .eq('id', id)
-      .eq('device_id', getDeviceId());
+      .eq('user_id', userId);
 
     if (error) throw error;
   },

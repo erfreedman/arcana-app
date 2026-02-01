@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Header.css';
 
-function Header({ title, showBack, onBack, isOnline, isSyncing }) {
+function Header({ title, showBack, onBack, isOnline, isSyncing, user, onSignOut }) {
+  const [showMenu, setShowMenu] = useState(false);
+
   return (
     <header className="header">
       <div className="header-content">
@@ -23,7 +25,7 @@ function Header({ title, showBack, onBack, isOnline, isSyncing }) {
           )}
         </div>
 
-        <div className="header-status">
+        <div className="header-actions">
           {isSyncing && (
             <span className="sync-indicator" title="Syncing...">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="spin">
@@ -43,6 +45,32 @@ function Header({ title, showBack, onBack, isOnline, isSyncing }) {
                 <line x1="12" y1="20" x2="12.01" y2="20" />
               </svg>
             </span>
+          )}
+          {user && (
+            <div className="header-menu-wrapper">
+              <button
+                className="header-menu-btn"
+                onClick={() => setShowMenu(!showMenu)}
+                aria-label="Menu"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="1" />
+                  <circle cx="12" cy="5" r="1" />
+                  <circle cx="12" cy="19" r="1" />
+                </svg>
+              </button>
+              {showMenu && (
+                <>
+                  <div className="header-menu-backdrop" onClick={() => setShowMenu(false)} />
+                  <div className="header-menu">
+                    <div className="header-menu-email">{user.email}</div>
+                    <button className="header-menu-item" onClick={() => { onSignOut(); setShowMenu(false); }}>
+                      Sign Out
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           )}
         </div>
       </div>

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import AuthPage from './components/AuthPage';
 import Header from './components/Header';
 import Navigation from './components/Navigation';
 import CardLibrary from './components/CardLibrary';
@@ -9,15 +11,17 @@ import ReadingDetail from './components/ReadingDetail';
 import ReadingForm from './components/ReadingForm';
 import { useSupabaseSync } from './hooks/useSupabaseSync';
 
-function App() {
+function AppContent() {
+  const { user, loading, signOut } = useAuth();
+
   // Navigation state
-  const [activeTab, setActiveTab] = useState('library'); // 'library' or 'readings'
-  const [currentView, setCurrentView] = useState('main'); // 'main', 'cardDetail', 'folderView', 'readingDetail', 'newReading'
+  const [activeTab, setActiveTab] = useState('library');
+  const [currentView, setCurrentView] = useState('main');
   const [selectedCardId, setSelectedCardId] = useState(null);
   const [selectedFolderId, setSelectedFolderId] = useState(null);
   const [selectedReadingId, setSelectedReadingId] = useState(null);
 
-  // Data from Supabase sync hook
+  // Data from Supabase sync hook (pass user ID)
   const {
     cardNotes,
     folders,
@@ -31,7 +35,28 @@ function App() {
     createReading: createReadingInDb,
     updateReading,
     deleteReading: deleteReadingFromDb,
-  } = useSupabaseSync();
+  } = useSupabaseSync(user?.id);
+
+  // Show loading while checking auth
+  if (loading) {
+    return (
+      <div className="app">
+        <div className="auth-page">
+          <div className="auth-container">
+            <div className="auth-header">
+              <h1 className="auth-logo">arcana</h1>
+              <p className="auth-tagline">Loading...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show auth page if not logged in
+  if (!user) {
+    return <AuthPage />;
+  }
 
   // Wrapper for deleteFolder to handle view state
   const deleteFolder = async (folderId) => {
@@ -98,7 +123,7 @@ function App() {
 
   const getViewTitle = () => {
     if (currentView === 'cardDetail' && selectedCardId) {
-      return null; // Card name shown in detail
+      return null;
     }
     if (currentView === 'folderView' && selectedFolderId) {
       const folder = folders.find((f) => f.id === selectedFolderId);
@@ -123,6 +148,8 @@ function App() {
         onBack={handleBack}
         isOnline={isOnline}
         isSyncing={isSyncing}
+        user={user}
+        onSignOut={signOut}
       />
 
       {currentView === 'main' && (
@@ -182,6 +209,14 @@ function App() {
         )}
       </main>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 
