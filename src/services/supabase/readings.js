@@ -18,8 +18,9 @@ export const readingsService = {
       .insert({
         user_id: userId,
         folder_id: reading.folderId,
-        cards: reading.cards,
-        interpretation: reading.interpretation,
+        title: reading.title,
+        spreads: reading.spreads,
+        reflection: reading.reflection || '',
         reading_date: reading.date,
         local_id: reading.id,
         created_at: reading.createdAt,
@@ -34,6 +35,16 @@ export const readingsService = {
   async update(id, updates, userId) {
     const updateData = {};
 
+    if (updates.title !== undefined) {
+      updateData.title = updates.title;
+    }
+    if (updates.spreads !== undefined) {
+      updateData.spreads = updates.spreads;
+    }
+    if (updates.reflection !== undefined) {
+      updateData.reflection = updates.reflection;
+    }
+    // Keep backwards compatibility for old format
     if (updates.interpretation !== undefined) {
       updateData.interpretation = updates.interpretation;
     }
@@ -78,6 +89,10 @@ function mapToLocalFormat(dbRow) {
   return {
     id: dbRow.id,
     folderId: dbRow.folder_id,
+    title: dbRow.title,
+    spreads: dbRow.spreads,
+    reflection: dbRow.reflection,
+    // Keep old fields for backwards compatibility
     cards: dbRow.cards,
     interpretation: dbRow.interpretation,
     date: dbRow.reading_date,
