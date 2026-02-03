@@ -108,6 +108,13 @@ function AppContent() {
     setCurrentView('newReading');
   };
 
+  // Quick new reading from nav (with folder picker)
+  const handleQuickNewReading = (folderId) => {
+    setActiveTab('readings');
+    setSelectedFolderId(folderId);
+    setCurrentView('newReading');
+  };
+
   const handleBack = () => {
     if (currentView === 'cardDetail') {
       setCurrentView('main');
@@ -153,7 +160,12 @@ function AppContent() {
       />
 
       {currentView === 'main' && (
-        <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
+        <Navigation
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+          folders={folders}
+          onNewReading={handleQuickNewReading}
+        />
       )}
 
       <main className="container">
