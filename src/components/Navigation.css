@@ -25,6 +25,7 @@
   border: var(--border-light);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
+  width: 280px;
 }
 
 .nav-tab {
@@ -57,11 +58,7 @@
 }
 
 .nav-tab svg {
-  transition: transform 0.2s ease;
-}
-
-.nav-tab.active svg {
-  transform: scale(1.05);
+  flex-shrink: 0;
 }
 
 /* Create button styling */
