@@ -17,6 +17,57 @@
   background: var(--color-bg-elevated);
 }
 
+/* Spread section */
+.spread-section {
+  margin-bottom: var(--space-lg);
+}
+
+.spread-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-md);
+}
+
+.spread-number {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-bronze);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.remove-spread-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+}
+
+.remove-spread-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-danger);
+}
+
+.add-spread-btn {
+  width: 100%;
+  margin-bottom: var(--space-lg);
+  border: 1px dashed var(--color-bronze);
+  background: transparent;
+  color: var(--color-bronze);
+}
+
+.add-spread-btn:hover {
+  border-style: solid;
+  background: rgba(180, 140, 100, 0.1);
+}
+
 /* Cards list */
 .cards-list {
   display: flex;

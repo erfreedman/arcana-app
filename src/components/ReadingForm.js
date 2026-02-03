@@ -1,12 +1,17 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { getMajorArcana, getCardsBySuit } from '../data/tarotCards';
 import './ReadingForm.css';
 
+const createEmptySpread = () => ({
+  question: '',
+  cards: [{ cardId: '', searchTerm: '', position: '' }],
+  interpretation: '',
+});
+
 function ReadingForm({ folderId, onSubmit, onCancel }) {
   const [title, setTitle] = useState('');
-  const [cards, setCards] = useState([{ cardId: '', searchTerm: '', position: '' }]);
-  const [interpretation, setInterpretation] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [spreads, setSpreads] = useState([createEmptySpread()]);
   const [activeDropdown, setActiveDropdown] = useState(null);
 
   // Get all cards for autocomplete
@@ -27,8 +32,58 @@ function ReadingForm({ folderId, onSubmit, onCancel }) {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  const addCard = () => {
-    setCards([...cards, { cardId: '', searchTerm: '', position: '' }]);
+  // Spread operations
+  const addSpread = () => {
+    setSpreads([...spreads, createEmptySpread()]);
+  };
+
+  const removeSpread = (spreadIndex) => {
+    if (spreads.length > 1) {
+      setSpreads(spreads.filter((_, i) => i !== spreadIndex));
+    }
+  };
+
+  const updateSpread = (spreadIndex, updates) => {
+    setSpreads((prev) => {
+      const updated = [...prev];
+      updated[spreadIndex] = { ...updated[spreadIndex], ...updates };
+      return updated;
+    });
+  };
+
+  // Card operations within a spread
+  const addCard = (spreadIndex) => {
+    setSpreads((prev) => {
+      const updated = [...prev];
+      updated[spreadIndex] = {
+        ...updated[spreadIndex],
+        cards: [...updated[spreadIndex].cards, { cardId: '', searchTerm: '', position: '' }],
+      };
+      return updated;
+    });
+  };
+
+  const removeCard = (spreadIndex, cardIndex) => {
+    setSpreads((prev) => {
+      const updated = [...prev];
+      if (updated[spreadIndex].cards.length > 1) {
+        updated[spreadIndex] = {
+          ...updated[spreadIndex],
+          cards: updated[spreadIndex].cards.filter((_, i) => i !== cardIndex),
+        };
+      }
+      return updated;
+    });
+  };
+
+  const updateCard = (spreadIndex, cardIndex, updates) => {
+    setSpreads((prev) => {
+      const updated = [...prev];
+      const updatedCards = [...updated[spreadIndex].cards];
+      updatedCards[cardIndex] = { ...updatedCards[cardIndex], ...updates };
+      updated[spreadIndex] = { ...updated[spreadIndex], cards: updatedCards };
+      return updated;
+    });
   };
 
   // Filter cards based on search term
@@ -39,50 +94,39 @@ function ReadingForm({ folderId, onSubmit, onCancel }) {
   };
 
   // Select a card from dropdown
-  const selectCard = (index, card) => {
-    updateCard(index, { cardId: card.id, searchTerm: card.name });
+  const selectCard = (spreadIndex, cardIndex, card) => {
+    updateCard(spreadIndex, cardIndex, { cardId: card.id, searchTerm: card.name });
     setActiveDropdown(null);
-  };
-
-  const removeCard = (index) => {
-    if (cards.length > 1) {
-      setCards(cards.filter((_, i) => i !== index));
-    }
-  };
-
-  const updateCard = (index, updates) => {
-    setCards((prev) => {
-      const updated = [...prev];
-      updated[index] = { ...updated[index], ...updates };
-      return updated;
-    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validCards = cards
-      .filter((c) => c.cardId)
-      .map(({ cardId, position }) => ({ cardId, position }));
-    if (validCards.length === 0) return;
+
+    // Validate: at least one spread with a question and at least one card
+    const validSpreads = spreads
+      .filter((s) => s.question.trim() && s.cards.some((c) => c.cardId))
+      .map((s) => ({
+        question: s.question.trim(),
+        cards: s.cards
+          .filter((c) => c.cardId)
+          .map(({ cardId, position }) => ({ cardId, position })),
+        interpretation: s.interpretation,
+      }));
+
+    if (validSpreads.length === 0) return;
 
     onSubmit({
       folderId,
       title: title.trim() || null,
-      cards: validCards,
-      interpretation,
+      spreads: validSpreads,
+      reflection: '',
       date,
     });
   };
 
-  const getPositionSuggestions = (index) => {
-    const suggestions = [
-      ['Mind', 'Body', 'Spirit'],
-      ['Situation', 'Action', 'Outcome'],
-      ['You', 'Them', 'The Relationship'],
-      ['Past', 'Present', 'Future'],
-    ];
-    return suggestions[index % suggestions.length];
-  };
+  const isFormValid = spreads.some(
+    (s) => s.question.trim() && s.cards.some((c) => c.cardId)
+  );
 
   return (
     <form className="reading-form fade-in" onSubmit={handleSubmit}>
@@ -111,100 +155,127 @@ function ReadingForm({ folderId, onSubmit, onCancel }) {
 
       <div className="divider" />
 
-      {/* Cards */}
-      <div className="form-group">
-        <label>Cards Pulled</label>
-        <div className="cards-list">
-          {cards.map((card, index) => (
-            <div key={index} className="card-entry">
-              <div className="card-entry-header">
-                <span className="card-entry-number">Card {index + 1}</span>
-                {cards.length > 1 && (
-                  <button
-                    type="button"
-                    className="remove-card-btn"
-                    onClick={() => removeCard(index)}
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M18 6L6 18M6 6l12 12" />
-                    </svg>
-                  </button>
-                )}
-              </div>
+      {/* Spreads */}
+      {spreads.map((spread, spreadIndex) => (
+        <div key={spreadIndex} className="spread-section">
+          <div className="spread-header">
+            <span className="spread-number">Spread {spreadIndex + 1}</span>
+            {spreads.length > 1 && (
+              <button
+                type="button"
+                className="remove-spread-btn"
+                onClick={() => removeSpread(spreadIndex)}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
 
-              <div className="card-entry-row">
-                <div className="card-autocomplete" onClick={(e) => e.stopPropagation()}>
-                  <input
-                    type="text"
-                    placeholder="Type to search cards..."
-                    value={card.searchTerm}
-                    onChange={(e) => {
-                      updateCard(index, { searchTerm: e.target.value, cardId: '' });
-                      setActiveDropdown(index);
-                    }}
-                    onFocus={() => setActiveDropdown(index)}
-                    required={index === 0}
-                    autoComplete="off"
-                  />
-                  {activeDropdown === index && (
-                    <div className="card-dropdown">
-                      {getFilteredCards(card.searchTerm).map((c) => (
-                        <button
-                          key={c.id}
-                          type="button"
-                          className="card-dropdown-item"
-                          onClick={() => selectCard(index, c)}
-                        >
-                          {c.name}
-                        </button>
-                      ))}
+          {/* Question */}
+          <div className="form-group">
+            <label htmlFor={`spread-question-${spreadIndex}`}>Spread</label>
+            <input
+              id={`spread-question-${spreadIndex}`}
+              type="text"
+              value={spread.question}
+              onChange={(e) => updateSpread(spreadIndex, { question: e.target.value })}
+              placeholder="What question are you exploring?"
+              required={spreadIndex === 0}
+            />
+          </div>
+
+          {/* Cards */}
+          <div className="form-group">
+            <label>Cards Pulled</label>
+            <div className="cards-list">
+              {spread.cards.map((card, cardIndex) => (
+                <div key={cardIndex} className="card-entry">
+                  <div className="card-entry-header">
+                    <span className="card-entry-number">Card {cardIndex + 1}</span>
+                    {spread.cards.length > 1 && (
+                      <button
+                        type="button"
+                        className="remove-card-btn"
+                        onClick={() => removeCard(spreadIndex, cardIndex)}
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="card-entry-row">
+                    <div className="card-autocomplete" onClick={(e) => e.stopPropagation()}>
+                      <input
+                        type="text"
+                        placeholder="Type to search cards..."
+                        value={card.searchTerm}
+                        onChange={(e) => {
+                          updateCard(spreadIndex, cardIndex, { searchTerm: e.target.value, cardId: '' });
+                          setActiveDropdown(`${spreadIndex}-${cardIndex}`);
+                        }}
+                        onFocus={() => setActiveDropdown(`${spreadIndex}-${cardIndex}`)}
+                        required={spreadIndex === 0 && cardIndex === 0}
+                        autoComplete="off"
+                      />
+                      {activeDropdown === `${spreadIndex}-${cardIndex}` && (
+                        <div className="card-dropdown">
+                          {getFilteredCards(card.searchTerm).map((c) => (
+                            <button
+                              key={c.id}
+                              type="button"
+                              className="card-dropdown-item"
+                              onClick={() => selectCard(spreadIndex, cardIndex, c)}
+                            >
+                              {c.name}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              </div>
+                  </div>
 
-              <div className="position-field">
-                <input
-                  type="text"
-                  placeholder="Position (optional, e.g., Mind, Body, Spirit)"
-                  value={card.position}
-                  onChange={(e) => updateCard(index, { position: e.target.value })}
-                />
-                <div className="position-suggestions">
-                  {getPositionSuggestions(index).map((suggestion) => (
-                    <button
-                      key={suggestion}
-                      type="button"
-                      className="position-suggestion"
-                      onClick={() => updateCard(index, { position: suggestion })}
-                    >
-                      {suggestion}
-                    </button>
-                  ))}
+                  <div className="position-field">
+                    <input
+                      type="text"
+                      placeholder="Position (optional, e.g., Mind, Body, Spirit)"
+                      value={card.position}
+                      onChange={(e) => updateCard(spreadIndex, cardIndex, { position: e.target.value })}
+                    />
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <button type="button" className="add-card-btn" onClick={addCard}>
-          + Add Another Card
-        </button>
-      </div>
+            <button type="button" className="add-card-btn" onClick={() => addCard(spreadIndex)}>
+              + Add Another Card
+            </button>
+          </div>
+
+          {/* Interpretation for this spread */}
+          <div className="form-group">
+            <label htmlFor={`interpretation-${spreadIndex}`}>Interpretation</label>
+            <textarea
+              id={`interpretation-${spreadIndex}`}
+              value={spread.interpretation}
+              onChange={(e) => updateSpread(spreadIndex, { interpretation: e.target.value })}
+              placeholder="What insights did the cards reveal for this question?"
+              rows={4}
+            />
+          </div>
+
+          {spreadIndex < spreads.length - 1 && <div className="divider" />}
+        </div>
+      ))}
+
+      <button type="button" className="add-spread-btn" onClick={addSpread}>
+        + Add Another Spread
+      </button>
 
       <div className="divider" />
-
-      {/* Interpretation */}
-      <div className="form-group">
-        <label htmlFor="interpretation">Your Interpretation</label>
-        <textarea
-          id="interpretation"
-          value={interpretation}
-          onChange={(e) => setInterpretation(e.target.value)}
-          placeholder="What insights did the cards reveal? How do they relate to your question or situation?"
-          rows={6}
-        />
-      </div>
 
       {/* Actions */}
       <div className="form-actions">
@@ -214,7 +285,7 @@ function ReadingForm({ folderId, onSubmit, onCancel }) {
         <button
           type="submit"
           className="btn-primary"
-          disabled={!cards.some((c) => c.cardId)}
+          disabled={!isFormValid}
         >
           Save Reading
         </button>

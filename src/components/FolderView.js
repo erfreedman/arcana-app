@@ -17,6 +17,30 @@ function FolderView({ folder, readings, onReadingSelect, onNewReading }) {
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
 
+  // Get all cards from a reading (handles both old and new format)
+  const getAllCards = (reading) => {
+    if (reading.spreads) {
+      return reading.spreads.flatMap((s) => s.cards);
+    }
+    return reading.cards || [];
+  };
+
+  // Get preview text for a reading
+  const getPreviewText = (reading) => {
+    if (reading.spreads && reading.spreads.length > 0) {
+      // Show the first spread's question
+      const firstQuestion = reading.spreads[0].question;
+      if (firstQuestion) {
+        if (reading.spreads.length > 1) {
+          return `${firstQuestion} (+${reading.spreads.length - 1} more)`;
+        }
+        return firstQuestion;
+      }
+    }
+    // Fall back to interpretation for old format
+    return reading.interpretation;
+  };
+
   return (
     <div className="folder-view fade-in">
       <div className="folder-view-header">
@@ -48,44 +72,49 @@ function FolderView({ folder, readings, onReadingSelect, onNewReading }) {
         </div>
       ) : (
         <div className="readings-list">
-          {sortedReadings.map((reading) => (
-            <button
-              key={reading.id}
-              className="reading-item card"
-              onClick={() => onReadingSelect(reading.id)}
-            >
-              <div className="reading-item-header">
-                {reading.title && (
-                  <h3 className="reading-title">{reading.title}</h3>
+          {sortedReadings.map((reading) => {
+            const allCards = getAllCards(reading);
+            const previewText = getPreviewText(reading);
+
+            return (
+              <button
+                key={reading.id}
+                className="reading-item card"
+                onClick={() => onReadingSelect(reading.id)}
+              >
+                <div className="reading-item-header">
+                  {reading.title && (
+                    <h3 className="reading-title">{reading.title}</h3>
+                  )}
+                  <time className="reading-date">{formatDate(reading.createdAt)}</time>
+                </div>
+
+                <div className="reading-cards">
+                  {allCards.map((card, i) => {
+                    const cardInfo = getCardById(card.cardId);
+                    return (
+                      <span key={i} className="reading-card-chip">
+                        {cardInfo?.name || 'Unknown'}
+                        {card.reversed && ' ↓'}
+                      </span>
+                    );
+                  })}
+                </div>
+
+                {previewText && (
+                  <p className="reading-preview">
+                    {previewText.length > 120
+                      ? previewText.substring(0, 120) + '...'
+                      : previewText}
+                  </p>
                 )}
-                <time className="reading-date">{formatDate(reading.createdAt)}</time>
-              </div>
 
-              <div className="reading-cards">
-                {reading.cards.map((card, i) => {
-                  const cardInfo = getCardById(card.cardId);
-                  return (
-                    <span key={i} className="reading-card-chip">
-                      {cardInfo?.name || 'Unknown'}
-                      {card.reversed && ' ↓'}
-                    </span>
-                  );
-                })}
-              </div>
-
-              {reading.interpretation && (
-                <p className="reading-preview">
-                  {reading.interpretation.length > 120
-                    ? reading.interpretation.substring(0, 120) + '...'
-                    : reading.interpretation}
-                </p>
-              )}
-
-              <div className="reading-item-footer">
-                <span className="view-link">View reading →</span>
-              </div>
-            </button>
-          ))}
+                <div className="reading-item-footer">
+                  <span className="view-link">View reading →</span>
+                </div>
+              </button>
+            );
+          })}
         </div>
       )}
     </div>

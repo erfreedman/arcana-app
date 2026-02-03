@@ -20,6 +20,41 @@
   color: var(--color-bronze);
 }
 
+/* Spread display */
+.spread-detail {
+  margin-bottom: var(--space-lg);
+}
+
+.spread-question {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-md) 0;
+  font-style: italic;
+}
+
+.spread-question-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0 0 var(--space-md) 0;
+}
+
+.spread-interpretation {
+  margin-top: var(--space-lg);
+}
+
+.spread-interpretation h3 {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0;
+}
+
 .reading-detail-section {
   margin-bottom: var(--space-xl);
 }
