@@ -51,7 +51,12 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-md);
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-md);
+  background: var(--color-bg-elevated);
+  border: var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .keywords-section h3 {
@@ -74,6 +79,10 @@
   color: var(--color-text-secondary);
   padding: var(--space-xs) 0;
   border-bottom: var(--border-light);
+}
+
+.keyword:last-child {
+  border-bottom: none;
 }
 
 .keywords-list.reversed .keyword {
