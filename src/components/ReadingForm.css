@@ -6,11 +6,13 @@
   margin-bottom: var(--space-xl);
 }
 
+.form-group input[type="text"],
 .form-group input[type="date"] {
   background: var(--color-bg-secondary);
   border: var(--border-light);
 }
 
+.form-group input[type="text"]:focus,
 .form-group input[type="date"]:focus {
   background: var(--color-bg-elevated);
 }
@@ -71,37 +73,56 @@
   margin-bottom: var(--space-md);
 }
 
-.card-select-wrapper {
+.card-autocomplete {
   flex: 1;
+  position: relative;
 }
 
-.card-select-wrapper select {
+.card-autocomplete input {
   margin: 0;
   background: var(--color-bg-secondary);
   border: var(--border-light);
+  width: 100%;
 }
 
-.card-select-wrapper select:focus {
+.card-autocomplete input:focus {
   background: var(--color-bg-elevated);
 }
 
-.reversed-toggle {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  font-size: 0.85rem;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  white-space: nowrap;
-  text-transform: none;
-  letter-spacing: 0;
+.card-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  background: var(--color-bg-elevated);
+  border: var(--border-light);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  box-shadow: var(--shadow-md);
+  z-index: 100;
 }
 
-.reversed-toggle input[type='checkbox'] {
-  width: 18px;
-  height: 18px;
+.card-dropdown-item {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-bottom: var(--border-light);
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
   cursor: pointer;
-  accent-color: var(--color-bronze);
+}
+
+.card-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.card-dropdown-item:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
 }
 
 .position-field input {

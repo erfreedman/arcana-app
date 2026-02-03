@@ -35,6 +35,9 @@ function ReadingDetail({ reading, onUpdate, onDelete }) {
     <div className="reading-detail fade-in">
       {/* Header */}
       <div className="reading-detail-header">
+        {reading.title && (
+          <h1 className="reading-detail-title">{reading.title}</h1>
+        )}
         <time className="reading-detail-date">
           {formatDate(reading.date || reading.createdAt)}
         </time>

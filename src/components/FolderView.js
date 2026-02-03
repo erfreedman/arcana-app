@@ -55,6 +55,9 @@ function FolderView({ folder, readings, onReadingSelect, onNewReading }) {
               onClick={() => onReadingSelect(reading.id)}
             >
               <div className="reading-item-header">
+                {reading.title && (
+                  <h3 className="reading-title">{reading.title}</h3>
+                )}
                 <time className="reading-date">{formatDate(reading.createdAt)}</time>
               </div>
 

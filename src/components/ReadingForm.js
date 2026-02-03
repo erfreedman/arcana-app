@@ -1,14 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { getMajorArcana, getCardsBySuit } from '../data/tarotCards';
 import './ReadingForm.css';
 
 function ReadingForm({ folderId, onSubmit, onCancel }) {
-  const [cards, setCards] = useState([{ cardId: '', reversed: false, position: '' }]);
+  const [title, setTitle] = useState('');
+  const [cards, setCards] = useState([{ cardId: '', searchTerm: '', position: '' }]);
   const [interpretation, setInterpretation] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [activeDropdown, setActiveDropdown] = useState(null);
+
+  // Get all cards for autocomplete
+  const allCards = useMemo(() => {
+    return [
+      ...getMajorArcana(),
+      ...getCardsBySuit('Wands'),
+      ...getCardsBySuit('Cups'),
+      ...getCardsBySuit('Swords'),
+      ...getCardsBySuit('Pentacles'),
+    ];
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => setActiveDropdown(null);
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
   const addCard = () => {
-    setCards([...cards, { cardId: '', reversed: false, position: '' }]);
+    setCards([...cards, { cardId: '', searchTerm: '', position: '' }]);
+  };
+
+  // Filter cards based on search term
+  const getFilteredCards = (searchTerm) => {
+    if (!searchTerm) return allCards;
+    const term = searchTerm.toLowerCase();
+    return allCards.filter((c) => c.name.toLowerCase().includes(term));
+  };
+
+  // Select a card from dropdown
+  const selectCard = (index, card) => {
+    updateCard(index, { cardId: card.id, searchTerm: card.name });
+    setActiveDropdown(null);
   };
 
   const removeCard = (index) => {
@@ -17,19 +50,24 @@ function ReadingForm({ folderId, onSubmit, onCancel }) {
     }
   };
 
-  const updateCard = (index, field, value) => {
-    const updated = [...cards];
-    updated[index] = { ...updated[index], [field]: value };
-    setCards(updated);
+  const updateCard = (index, updates) => {
+    setCards((prev) => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], ...updates };
+      return updated;
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validCards = cards.filter((c) => c.cardId);
+    const validCards = cards
+      .filter((c) => c.cardId)
+      .map(({ cardId, position }) => ({ cardId, position }));
     if (validCards.length === 0) return;
 
     onSubmit({
       folderId,
+      title: title.trim() || null,
       cards: validCards,
       interpretation,
       date,
@@ -38,16 +76,28 @@ function ReadingForm({ folderId, onSubmit, onCancel }) {
 
   const getPositionSuggestions = (index) => {
     const suggestions = [
-      ['Past', 'Present', 'Future'],
-      ['Situation', 'Action', 'Outcome'],
       ['Mind', 'Body', 'Spirit'],
+      ['Situation', 'Action', 'Outcome'],
       ['You', 'Them', 'The Relationship'],
+      ['Past', 'Present', 'Future'],
     ];
     return suggestions[index % suggestions.length];
   };
 
   return (
     <form className="reading-form fade-in" onSubmit={handleSubmit}>
+      {/* Title field */}
+      <div className="form-group">
+        <label htmlFor="reading-title">Title (optional)</label>
+        <input
+          id="reading-title"
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Give this reading a name..."
+        />
+      </div>
+
       {/* Date field */}
       <div className="form-group">
         <label htmlFor="reading-date">Date</label>
@@ -83,67 +133,42 @@ function ReadingForm({ folderId, onSubmit, onCancel }) {
               </div>
 
               <div className="card-entry-row">
-                <div className="card-select-wrapper">
-                  <select
-                    value={card.cardId}
-                    onChange={(e) => updateCard(index, 'cardId', e.target.value)}
-                    required={index === 0}
-                  >
-                    <option value="">Select a card...</option>
-                    <optgroup label="Major Arcana">
-                      {getMajorArcana().map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.name}
-                        </option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="Wands">
-                      {getCardsBySuit('Wands').map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.name}
-                        </option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="Cups">
-                      {getCardsBySuit('Cups').map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.name}
-                        </option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="Swords">
-                      {getCardsBySuit('Swords').map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.name}
-                        </option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="Pentacles">
-                      {getCardsBySuit('Pentacles').map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.name}
-                        </option>
-                      ))}
-                    </optgroup>
-                  </select>
-                </div>
-
-                <label className="reversed-toggle">
+                <div className="card-autocomplete" onClick={(e) => e.stopPropagation()}>
                   <input
-                    type="checkbox"
-                    checked={card.reversed}
-                    onChange={(e) => updateCard(index, 'reversed', e.target.checked)}
+                    type="text"
+                    placeholder="Type to search cards..."
+                    value={card.searchTerm}
+                    onChange={(e) => {
+                      updateCard(index, { searchTerm: e.target.value, cardId: '' });
+                      setActiveDropdown(index);
+                    }}
+                    onFocus={() => setActiveDropdown(index)}
+                    required={index === 0}
+                    autoComplete="off"
                   />
-                  <span>Reversed</span>
-                </label>
+                  {activeDropdown === index && (
+                    <div className="card-dropdown">
+                      {getFilteredCards(card.searchTerm).map((c) => (
+                        <button
+                          key={c.id}
+                          type="button"
+                          className="card-dropdown-item"
+                          onClick={() => selectCard(index, c)}
+                        >
+                          {c.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="position-field">
                 <input
                   type="text"
-                  placeholder="Position (optional, e.g., Past, Present, Future)"
+                  placeholder="Position (optional, e.g., Mind, Body, Spirit)"
                   value={card.position}
-                  onChange={(e) => updateCard(index, 'position', e.target.value)}
+                  onChange={(e) => updateCard(index, { position: e.target.value })}
                 />
                 <div className="position-suggestions">
                   {getPositionSuggestions(index).map((suggestion) => (
@@ -151,7 +176,7 @@ function ReadingForm({ folderId, onSubmit, onCancel }) {
                       key={suggestion}
                       type="button"
                       className="position-suggestion"
-                      onClick={() => updateCard(index, 'position', suggestion)}
+                      onClick={() => updateCard(index, { position: suggestion })}
                     >
                       {suggestion}
                     </button>
