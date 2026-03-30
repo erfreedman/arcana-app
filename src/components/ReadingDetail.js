@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { getCardById } from '../data/tarotCards';
+import { getCardImageUrl } from '../data/cardImages';
 import './ReadingDetail.css';
 
 function ReadingDetail({ reading, onUpdate, onDelete }) {
@@ -89,25 +90,34 @@ function ReadingDetail({ reading, onUpdate, onDelete }) {
           )}
 
           {/* Cards */}
-          <div className="reading-detail-cards">
+          <div className={`reading-spread-layout spread-layout-${
+            spread.cards.length === 1 ? 'single' :
+            spread.cards.length === 3 ? 'three' : 'custom'
+          }`}>
             {spread.cards.map((card, cardIndex) => {
               const cardInfo = getCardById(card.cardId);
               if (!cardInfo) return null;
+              const imageUrl = getCardImageUrl(card.cardId);
 
               return (
-                <div key={cardIndex} className="reading-card-item">
-                  <div className="reading-card-header">
-                    {card.position && (
-                      <span className="reading-card-position">{card.position}</span>
+                <div key={cardIndex} className="spread-card">
+                  <div className={`spread-card-image-wrapper${card.reversed ? ' reversed' : ''}`}>
+                    {imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt={cardInfo.name}
+                        className="spread-card-image"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="spread-card-placeholder">
+                        <span>{cardInfo.name}</span>
+                      </div>
                     )}
                     {card.reversed && <span className="reversed-badge">Reversed</span>}
                   </div>
-                  <h3 className="reading-card-name">{cardInfo.name}</h3>
-                  <p className="reading-card-keywords">
-                    {card.reversed
-                      ? cardInfo.reversedKeywords.join(' · ')
-                      : cardInfo.keywords.join(' · ')}
-                  </p>
+                  <span className="spread-card-name">{cardInfo.name}</span>
+                  <span className="spread-card-position">{card.position || '\u00A0'}</span>
                 </div>
               );
             })}

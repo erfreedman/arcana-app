@@ -68,57 +68,130 @@
   margin-bottom: var(--space-md);
 }
 
-/* Cards */
-.reading-detail-cards {
+/* Spread Layouts */
+.reading-spread-layout {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-}
-
-.reading-card-item {
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
   background: var(--color-bg-elevated);
   border: var(--border-light);
   border-radius: var(--radius-lg);
-  padding: var(--space-lg);
   box-shadow: var(--shadow-sm);
 }
 
-.reading-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-sm);
+.spread-layout-single {
+  justify-content: center;
 }
 
-.reading-card-position {
-  font-size: 0.7rem;
+.spread-layout-three {
+  justify-content: center;
+}
+
+.spread-layout-custom {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Individual card in spread */
+.spread-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.spread-card-image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 5;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 2px solid rgba(176, 137, 104, 0.2);
+  background: var(--color-bg-elevated);
+  transition: border-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spread-card,
+.spread-card * {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+.spread-card-image-wrapper.reversed {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+
+.spread-card-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.spread-card-image-wrapper.reversed .spread-card-image {
+  transform: rotate(180deg);
+}
+
+.spread-card-image-wrapper .reversed-badge {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.spread-card-placeholder {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background: var(--color-bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-sm);
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.spread-card-position {
+  font-size: 0.65rem;
   font-weight: 500;
   color: var(--color-bronze);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
+  text-align: center;
+  min-height: 1.3em;
+}
+
+.spread-card-name {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-align: center;
+  line-height: 1.3;
+  min-height: 2.6em;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .reversed-badge {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   font-weight: 500;
-  padding: var(--space-xs) var(--space-sm);
-  background: rgba(239, 68, 68, 0.1);
+  padding: 2px 6px;
+  background: rgba(239, 68, 68, 0.85);
   border-radius: var(--radius-sm);
-  color: var(--color-danger);
-}
-
-.reading-card-name {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  margin: 0 0 var(--space-sm) 0;
-}
-
-.reading-card-keywords {
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-  margin: 0;
-  line-height: 1.6;
+  color: white;
+  white-space: nowrap;
 }
 
 /* Interpretation */
