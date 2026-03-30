@@ -88,13 +88,6 @@ function CardLibrary({ cardNotes, onCardSelect }) {
                 alt={card.name}
                 loading="lazy"
               />
-              {cardNotes[card.id] && (
-                <div className="card-tile-badge">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-                    <circle cx="12" cy="12" r="10" />
-                  </svg>
-                </div>
-              )}
             </div>
             <div className="card-tile-name">{card.name}</div>
           </button>
