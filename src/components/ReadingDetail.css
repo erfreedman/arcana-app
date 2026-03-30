@@ -2,9 +2,37 @@
   padding-bottom: var(--space-xl);
 }
 
+/* Use consistent section spacing throughout */
+.reading-detail .divider {
+  margin: var(--space-lg) 0;
+}
+
 .reading-detail-header {
   text-align: center;
-  margin-bottom: var(--space-xl);
+}
+
+.btn-edit-icon {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(44, 40, 36, 0.2);
+  background: var(--color-bg-primary);
+  color: var(--color-text-secondary);
+}
+
+.btn-edit-icon:hover {
+  color: var(--color-bronze);
+  border-color: var(--color-bronze);
+}
+
+.reading-detail-edit-btn {
+  display: block;
+  margin-top: var(--space-md);
+  margin-left: auto;
 }
 
 .reading-detail-title {
@@ -29,7 +57,7 @@
   font-size: 1.1rem;
   font-weight: 500;
   color: var(--color-text-primary);
-  margin: 0 0 var(--space-md) 0;
+  margin: 0 0 var(--space-lg) 0;
   font-style: italic;
 }
 
@@ -39,7 +67,7 @@
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin: 0 0 var(--space-md) 0;
+  margin: 0 0 var(--space-lg) 0;
 }
 
 .spread-interpretation {
@@ -52,11 +80,7 @@
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin: 0;
-}
-
-.reading-detail-section {
-  margin-bottom: var(--space-xl);
+  margin: 0 0 var(--space-sm) 0;
 }
 
 .reading-detail-section h2 {
@@ -65,7 +89,7 @@
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin-bottom: var(--space-md);
+  margin: 0 0 var(--space-sm) 0;
 }
 
 /* Spread Layouts */
@@ -128,7 +152,6 @@
 .spread-card-image-wrapper.reversed {
   border-color: rgba(239, 68, 68, 0.3);
 }
-
 
 .spread-card-image {
   display: block;
@@ -194,18 +217,7 @@
   white-space: nowrap;
 }
 
-/* Interpretation */
-.interpretation-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-md);
-}
-
-.interpretation-header h2 {
-  margin: 0;
-}
-
+/* Interpretation & Reflection displays */
 .interpretation-display {
   background: var(--color-bg-elevated);
   border: var(--border-light);
@@ -226,33 +238,9 @@
   font-style: italic;
 }
 
-.interpretation-editor {
-  background: var(--color-bg-elevated);
-  border: var(--border-light);
-  border-radius: var(--radius-lg);
-  padding: var(--space-md);
-  box-shadow: var(--shadow-sm);
-}
-
-.interpretation-editor textarea {
-  margin-bottom: var(--space-md);
-  background: var(--color-bg-secondary);
-  border: var(--border-light);
-}
-
-.interpretation-editor textarea:focus {
-  background: var(--color-bg-elevated);
-}
-
-.interpretation-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--space-sm);
-}
-
 /* Delete */
 .reading-detail-actions {
-  padding-top: var(--space-lg);
+  margin-top: var(--space-lg);
 }
 
 .btn-delete {
@@ -296,4 +284,64 @@
 
 .btn-danger:hover {
   opacity: 0.9;
+}
+
+/* Section header with inline edit button */
+.section-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-sm);
+}
+
+.section-header-row h2,
+.section-header-row h3 {
+  margin: 0;
+}
+
+.btn-delete-spread {
+  width: 100%;
+  margin-top: var(--space-md);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: transparent;
+  color: var(--color-danger);
+}
+
+.btn-delete-spread:hover {
+  background: var(--color-danger);
+  border-color: var(--color-danger);
+  color: white;
+}
+
+/* Section Save/Cancel actions */
+.section-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+}
+
+/* Edit mode form styling within reading detail */
+.reading-detail .form-group {
+  margin-bottom: var(--space-lg);
+}
+
+.reading-detail .form-group input[type="text"],
+.reading-detail .form-group input[type="date"] {
+  background: var(--color-bg-secondary);
+  border: var(--border-light);
+}
+
+.reading-detail .form-group input[type="text"]:focus,
+.reading-detail .form-group input[type="date"]:focus {
+  background: var(--color-bg-elevated);
+}
+
+.reading-detail .form-group textarea {
+  background: var(--color-bg-secondary);
+  border: var(--border-light);
+}
+
+.reading-detail .form-group textarea:focus {
+  background: var(--color-bg-elevated);
 }
