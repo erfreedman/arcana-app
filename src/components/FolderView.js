@@ -90,7 +90,7 @@ function FolderView({ folder, readings, onReadingSelect, onNewReading }) {
                 </div>
 
                 <div className="reading-cards">
-                  {allCards.map((card, i) => {
+                  {allCards.slice(0, 3).map((card, i) => {
                     const cardInfo = getCardById(card.cardId);
                     return (
                       <span key={i} className="reading-card-chip">
@@ -99,6 +99,11 @@ function FolderView({ folder, readings, onReadingSelect, onNewReading }) {
                       </span>
                     );
                   })}
+                  {allCards.length > 3 && (
+                    <span className="reading-card-chip">
+                      +{allCards.length - 3} more
+                    </span>
+                  )}
                 </div>
 
                 {previewText && (
