@@ -217,6 +217,7 @@ function AppContent() {
             reading={readings.find((r) => r.id === selectedReadingId)}
             onUpdate={(updates) => updateReading(selectedReadingId, updates)}
             onDelete={() => deleteReading(selectedReadingId)}
+            folders={folders}
           />
         )}
       </main>

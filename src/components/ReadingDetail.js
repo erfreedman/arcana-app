@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { getCardById, getMajorArcana, getCardsBySuit } from '../data/tarotCards';
 import { getCardImageUrl } from '../data/cardImages';
 import './ReadingDetail.css';
@@ -9,8 +10,12 @@ const createEmptySpread = () => ({
   interpretation: '',
 });
 
-function ReadingDetail({ reading, onUpdate, onDelete }) {
+function ReadingDetail({ reading, onUpdate, onDelete, folders }) {
   const [editingSection, setEditingSection] = useState(null);
+  // Title menu
+  const [showTitleMenu, setShowTitleMenu] = useState(false);
+  const [showMoveModal, setShowMoveModal] = useState(false);
+  const [moveModalClosing, setMoveModalClosing] = useState(false);
   // Header editing
   const [editedTitle, setEditedTitle] = useState('');
   const [editedDate, setEditedDate] = useState('');
@@ -41,6 +46,24 @@ function ReadingDetail({ reading, onUpdate, onDelete }) {
     return () => document.removeEventListener('click', handleClickOutside);
   }, [editingSection]);
 
+  useEffect(() => {
+    if (!showMoveModal) return;
+    const scrollY = window.scrollY;
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      window.scrollTo(0, scrollY);
+    };
+  }, [showMoveModal]);
+
   if (!reading) {
     return <div className="reading-detail">Reading not found</div>;
   }
@@ -67,21 +90,48 @@ function ReadingDetail({ reading, onUpdate, onDelete }) {
     setShowDeleteSpreadConfirm(false);
   };
 
-  // --- Header section ---
+  // --- Title menu actions ---
 
-  const startEditingHeader = () => {
-    const dateValue = reading.date || reading.createdAt;
+  const startRenaming = () => {
+    setShowTitleMenu(false);
     setEditedTitle(reading.title || '');
-    setEditedDate(dateValue ? dateValue.split('T')[0] : new Date().toISOString().split('T')[0]);
-    setEditingSection('header');
+    setEditingSection('rename');
   };
 
-  const saveHeader = () => {
-    onUpdate({
-      title: editedTitle.trim() || null,
-      date: editedDate,
-    });
+  const saveRename = () => {
+    onUpdate({ title: editedTitle.trim() || null });
     setEditingSection(null);
+  };
+
+  const startEditingDate = () => {
+    setShowTitleMenu(false);
+    const dateValue = reading.date || reading.createdAt;
+    setEditedDate(dateValue ? dateValue.split('T')[0] : new Date().toISOString().split('T')[0]);
+    setEditingSection('date');
+  };
+
+  const saveDate = () => {
+    onUpdate({ date: editedDate });
+    setEditingSection(null);
+  };
+
+  const openMoveModal = () => {
+    setShowTitleMenu(false);
+    setMoveModalClosing(false);
+    setShowMoveModal(true);
+  };
+
+  const closeMoveModal = () => {
+    setMoveModalClosing(true);
+    setTimeout(() => {
+      setShowMoveModal(false);
+      setMoveModalClosing(false);
+    }, 200);
+  };
+
+  const moveToFolder = (folderId) => {
+    onUpdate({ folderId });
+    closeMoveModal();
   };
 
   // --- Spread section ---
@@ -209,7 +259,7 @@ function ReadingDetail({ reading, onUpdate, onDelete }) {
     <div className="reading-detail fade-in">
       {/* Header */}
       <div className="reading-detail-header">
-        {editingSection === 'header' ? (
+        {editingSection === 'rename' ? (
           <>
             <div className="form-group">
               <label htmlFor="edit-title">Title</label>
@@ -218,9 +268,18 @@ function ReadingDetail({ reading, onUpdate, onDelete }) {
                 type="text"
                 value={editedTitle}
                 onChange={(e) => setEditedTitle(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') saveRename(); if (e.key === 'Escape') cancelEditing(); }}
                 placeholder="Give this reading a name..."
+                autoFocus
               />
             </div>
+            <div className="section-actions">
+              <button onClick={cancelEditing}>Cancel</button>
+              <button className="btn-primary" onClick={saveRename}>Save</button>
+            </div>
+          </>
+        ) : editingSection === 'date' ? (
+          <>
             <div className="form-group">
               <label htmlFor="edit-date">Date</label>
               <input
@@ -228,30 +287,90 @@ function ReadingDetail({ reading, onUpdate, onDelete }) {
                 type="date"
                 value={editedDate}
                 onChange={(e) => setEditedDate(e.target.value)}
+                autoFocus
               />
             </div>
             <div className="section-actions">
               <button onClick={cancelEditing}>Cancel</button>
-              <button className="btn-primary" onClick={saveHeader}>Save</button>
+              <button className="btn-primary" onClick={saveDate}>Save</button>
             </div>
           </>
         ) : (
           <>
-            {reading.title && (
-              <h1 className="reading-detail-title">{reading.title}</h1>
-            )}
+            <div className="title-menu-anchor">
+              <h1
+                className="reading-detail-title reading-detail-title-tappable"
+                onClick={() => setShowTitleMenu(!showTitleMenu)}
+              >
+                {reading.title || 'Untitled Reading'}
+                <svg className="title-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </h1>
+              {showTitleMenu && (
+                <>
+                  <div className="title-menu-backdrop" onClick={() => setShowTitleMenu(false)} />
+                  <div className="title-menu">
+                    <button className="title-menu-item" onClick={startRenaming}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                        <path d="m15 5 4 4" />
+                      </svg>
+                      Rename
+                    </button>
+                    <button className="title-menu-item" onClick={startEditingDate}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                        <line x1="16" x2="16" y1="2" y2="6" />
+                        <line x1="8" x2="8" y1="2" y2="6" />
+                        <line x1="3" x2="21" y1="10" y2="10" />
+                      </svg>
+                      Edit date
+                    </button>
+                    <button className="title-menu-item" onClick={openMoveModal}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                      </svg>
+                      Move to...
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
             <time className="reading-detail-date">
               {formatDate(reading.date || reading.createdAt)}
             </time>
-            <button className="btn-edit-icon reading-detail-edit-btn" onClick={startEditingHeader} aria-label="Edit">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                <path d="m15 5 4 4" />
-              </svg>
-            </button>
           </>
         )}
       </div>
+
+      {/* Move modal - rendered via portal to cover entire screen */}
+      {showMoveModal && createPortal(
+        <div className={`move-modal-backdrop${moveModalClosing ? ' closing' : ''}`} onClick={closeMoveModal}>
+          <div className="move-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="move-modal-handle" />
+            <h2>Move to folder</h2>
+            <div className="move-modal-list">
+              {(folders || []).map((folder) => (
+                <button
+                  key={folder.id}
+                  className={`move-modal-item${folder.id === reading.folderId ? ' current' : ''}`}
+                  onClick={() => moveToFolder(folder.id)}
+                  disabled={folder.id === reading.folderId}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                  </svg>
+                  {folder.name}
+                  {folder.id === reading.folderId && <span className="move-modal-current">Current</span>}
+                </button>
+              ))}
+            </div>
+            <button className="move-modal-cancel" onClick={closeMoveModal}>Cancel</button>
+          </div>
+        </div>,
+        document.body
+      )}
 
       <div className="divider" />
 
