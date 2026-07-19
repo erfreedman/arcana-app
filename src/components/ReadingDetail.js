@@ -503,15 +503,11 @@ function ReadingDetail({ reading, onUpdate, onDelete, folders }) {
                   <h2 className="spread-question-label">Spread {spreadIndex + 1}</h2>
                 )}
                 <button
-                  className="btn-edit-icon"
+                  className="btn-small"
                   onClick={() => startEditingSpread(spreadIndex)}
                   disabled={editingSection !== null}
-                  aria-label="Edit spread"
                 >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                    <path d="m15 5 4 4" />
-                  </svg>
+                  Edit
                 </button>
               </div>
 
@@ -552,22 +548,7 @@ function ReadingDetail({ reading, onUpdate, onDelete, folders }) {
 
           {/* Interpretation */}
           <div className="spread-interpretation">
-            <div className="section-header-row">
-              <h3>Interpretation</h3>
-              {editingSection !== `interpretation-${spreadIndex}` && (
-                <button
-                  className="btn-edit-icon"
-                  onClick={() => startEditingInterpretation(spreadIndex)}
-                  disabled={editingSection !== null}
-                  aria-label="Edit interpretation"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                    <path d="m15 5 4 4" />
-                  </svg>
-                </button>
-              )}
-            </div>
+            <h3>Interpretation</h3>
 
             {editingSection === `interpretation-${spreadIndex}` ? (
               <>
@@ -586,7 +567,10 @@ function ReadingDetail({ reading, onUpdate, onDelete, folders }) {
                 </div>
               </>
             ) : (
-              <div className="interpretation-display">
+              <div
+                className="interpretation-display tappable-edit"
+                onClick={() => { if (!editingSection) startEditingInterpretation(spreadIndex); }}
+              >
                 {spread.interpretation ? (
                   <p>{spread.interpretation}</p>
                 ) : (
@@ -614,22 +598,7 @@ function ReadingDetail({ reading, onUpdate, onDelete, folders }) {
 
       {/* Reflection */}
       <section className="reading-detail-section">
-        <div className="section-header-row">
-          <h2>Reflection</h2>
-          {editingSection !== 'reflection' && (
-            <button
-              className="btn-edit-icon"
-              onClick={startEditingReflection}
-              disabled={editingSection !== null}
-              aria-label="Edit reflection"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                <path d="m15 5 4 4" />
-              </svg>
-            </button>
-          )}
-        </div>
+        <h2>Reflection</h2>
 
         {editingSection === 'reflection' ? (
           <>
@@ -646,7 +615,10 @@ function ReadingDetail({ reading, onUpdate, onDelete, folders }) {
             </div>
           </>
         ) : (
-          <div className="interpretation-display">
+          <div
+            className="interpretation-display tappable-edit"
+            onClick={() => { if (!editingSection) startEditingReflection(); }}
+          >
             {reading.reflection ? (
               <p>{reading.reflection}</p>
             ) : (
