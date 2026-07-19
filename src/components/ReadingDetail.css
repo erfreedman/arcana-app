@@ -411,7 +411,6 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   text-align: center;
-  min-height: 1.3em;
 }
 
 .spread-card-name {
@@ -420,10 +419,6 @@
   color: var(--color-text-secondary);
   text-align: center;
   line-height: 1.3;
-  min-height: 2.6em;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
 }
 
 .reversed-badge {

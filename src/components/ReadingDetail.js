@@ -538,7 +538,7 @@ function ReadingDetail({ reading, onUpdate, onDelete, folders }) {
                         {card.reversed && <span className="reversed-badge">Reversed</span>}
                       </div>
                       <span className="spread-card-name">{cardInfo.name}</span>
-                      <span className="spread-card-position">{card.position || '\u00A0'}</span>
+                      {card.position && <span className="spread-card-position">{card.position}</span>}
                     </div>
                   );
                 })}
