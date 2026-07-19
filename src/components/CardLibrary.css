@@ -161,10 +161,18 @@
   font-weight: 500;
   color: var(--color-text-secondary);
   line-height: 1.3;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.card-tile-notes-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-bronze);
+  flex-shrink: 0;
 }
 
 /* No results */

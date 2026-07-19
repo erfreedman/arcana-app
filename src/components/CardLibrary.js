@@ -89,7 +89,10 @@ function CardLibrary({ cardNotes, onCardSelect }) {
                 loading="lazy"
               />
             </div>
-            <div className="card-tile-name">{card.name}</div>
+            <div className="card-tile-name">
+              {card.name}
+              {cardNotes[card.id] && <span className="card-tile-notes-dot" />}
+            </div>
           </button>
         ))}
       </div>
