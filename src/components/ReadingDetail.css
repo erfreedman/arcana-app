@@ -301,16 +301,6 @@
   margin: 0 0 var(--space-sm) 0;
 }
 
-/* Tappable text to enter edit mode */
-.tappable-edit {
-  cursor: pointer;
-  transition: border-color 0.2s;
-}
-
-.tappable-edit:hover {
-  border-color: rgba(176, 137, 104, 0.4);
-}
-
 /* Spread Layouts */
 .reading-spread-layout {
   display: flex;
@@ -432,25 +422,6 @@
 }
 
 /* Interpretation & Reflection displays */
-.interpretation-display {
-  background: var(--color-bg-elevated);
-  border: var(--border-light);
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg);
-  box-shadow: var(--shadow-sm);
-}
-
-.interpretation-display p {
-  font-size: 0.95rem;
-  line-height: 1.8;
-  margin: 0;
-  white-space: pre-wrap;
-}
-
-.interpretation-empty {
-  color: var(--color-text-muted);
-  font-style: italic;
-}
 
 /* Delete */
 .reading-detail-actions {

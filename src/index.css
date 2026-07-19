@@ -307,3 +307,33 @@ label {
   background: var(--color-bronze);
   color: white;
 }
+
+/* Shared display styles for notes/interpretation sections */
+.interpretation-display {
+  background: var(--color-bg-elevated);
+  border: var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.interpretation-display p {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.interpretation-empty {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.tappable-edit {
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.tappable-edit:hover {
+  border-color: rgba(176, 137, 104, 0.4);
+}

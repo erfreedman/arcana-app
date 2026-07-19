@@ -74,18 +74,11 @@ function CardDetail({ cardId, notes, onSaveNotes }) {
       </div>
 
       {/* Personal Notes */}
-      <div className="card-detail-notes">
-        <div className="notes-header">
-          <h2>My Notes</h2>
-          {!isEditing && (
-            <button className="btn-small" onClick={() => setIsEditing(true)}>
-              {notes ? 'Edit' : 'Add'}
-            </button>
-          )}
-        </div>
+      <section className="card-detail-notes">
+        <h2>My Notes</h2>
 
         {isEditing ? (
-          <div className="notes-editor">
+          <>
             <textarea
               value={editedNotes}
               onChange={(e) => setEditedNotes(e.target.value)}
@@ -93,17 +86,20 @@ function CardDetail({ cardId, notes, onSaveNotes }) {
               rows={6}
               autoFocus
             />
-            <div className="notes-editor-actions">
+            <div className="section-actions">
               <button onClick={handleCancel}>Cancel</button>
               <button className="btn-primary" onClick={handleSave}>Save</button>
             </div>
-          </div>
+          </>
         ) : (
-          <div className="notes-display">
+          <div
+            className="interpretation-display tappable-edit"
+            onClick={() => setIsEditing(true)}
+          >
             {notes ? (
               <p>{notes}</p>
             ) : (
-              <p className="notes-empty">Add your personal notes and interpretations for this card.</p>
+              <p className="interpretation-empty">Add your personal notes and interpretations for this card.</p>
             )}
           </div>
         )}
@@ -116,7 +112,7 @@ function CardDetail({ cardId, notes, onSaveNotes }) {
             Saved
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 }
