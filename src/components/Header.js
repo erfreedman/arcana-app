@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Header.css';
 
-function Header({ title, showBack, onBack, isOnline, isSyncing, user, onSignOut }) {
+function Header({ showBack, onBack, isOnline, isSyncing, user, onSignOut }) {
   const [showMenu, setShowMenu] = useState(false);
 
   return (
@@ -18,11 +18,7 @@ function Header({ title, showBack, onBack, isOnline, isSyncing, user, onSignOut 
         )}
 
         <div className="header-title">
-          {title ? (
-            <h1 className="header-page-title">{title}</h1>
-          ) : (
-            <h1 className="header-logo">arcana</h1>
-          )}
+          <h1 className="header-logo">arcana</h1>
         </div>
 
         <div className="header-actions">

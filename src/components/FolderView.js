@@ -2,8 +2,30 @@ import React, { useState, useMemo } from 'react';
 import { getCardById } from '../data/tarotCards';
 import './FolderView.css';
 
-function FolderView({ folder, readings, onReadingSelect, onNewReading }) {
+function FolderView({ folder, readings, onReadingSelect, onNewReading, onRenameFolder, onDeleteFolder }) {
   const [searchQuery, setSearchQuery] = useState('');
+  const [showTitleMenu, setShowTitleMenu] = useState(false);
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [renameValue, setRenameValue] = useState('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  const startRenaming = () => {
+    setShowTitleMenu(false);
+    setRenameValue(folder?.name || '');
+    setIsRenaming(true);
+  };
+
+  const saveRename = () => {
+    if (renameValue.trim()) {
+      onRenameFolder(folder.id, renameValue.trim());
+      setIsRenaming(false);
+    }
+  };
+
+  const confirmDelete = () => {
+    setShowTitleMenu(false);
+    setShowDeleteConfirm(true);
+  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString + 'T00:00:00');
@@ -62,16 +84,76 @@ function FolderView({ folder, readings, onReadingSelect, onNewReading }) {
 
   return (
     <div className="folder-view fade-in">
-      <div className="folder-view-header">
-        <div className="folder-view-info">
-          <span className="folder-view-count">
-            {readings.length} {readings.length === 1 ? 'reading' : 'readings'}
-          </span>
-        </div>
+      <div className="page-header-with-action">
+        {isRenaming ? (
+          <div className="folder-rename-inline">
+            <input
+              type="text"
+              value={renameValue}
+              onChange={(e) => setRenameValue(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') saveRename(); if (e.key === 'Escape') setIsRenaming(false); }}
+              autoFocus
+            />
+            <div className="section-actions">
+              <button onClick={() => setIsRenaming(false)}>Cancel</button>
+              <button className="btn-primary" onClick={saveRename} disabled={!renameValue.trim()}>Save</button>
+            </div>
+          </div>
+        ) : (
+          <div className="title-menu-anchor">
+            <h1 className="page-title page-title-tappable" onClick={() => setShowTitleMenu(!showTitleMenu)}>
+              {folder?.name || 'Folder'}
+              <svg className="title-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </h1>
+            {showTitleMenu && (
+              <>
+                <div className="title-menu-backdrop" onClick={() => setShowTitleMenu(false)} />
+                <div className="title-menu">
+                  <button className="title-menu-item" onClick={startRenaming}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                      <path d="m15 5 4 4" />
+                    </svg>
+                    Rename
+                  </button>
+                  <button className="title-menu-item" onClick={() => setShowTitleMenu(false)}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" x2="12" y1="15" y2="3" />
+                    </svg>
+                    Export Folder
+                  </button>
+                  <div className="title-menu-divider" />
+                  <button className="title-menu-item danger" onClick={confirmDelete}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="3 6 5 6 21 6" />
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    </svg>
+                    Delete Folder
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        )}
         <button className="btn-small" onClick={onNewReading}>
           + New Reading
         </button>
       </div>
+
+      {showDeleteConfirm && (
+        <div className="delete-confirm">
+          <p>Delete "{folder?.name}" and all its readings?</p>
+          <div className="delete-confirm-actions">
+            <button onClick={() => setShowDeleteConfirm(false)}>Cancel</button>
+            <button className="btn-danger" onClick={() => onDeleteFolder(folder.id)}>Delete</button>
+          </div>
+        </div>
+      )}
+
 
       {/* Search */}
       {readings.length > 0 && (

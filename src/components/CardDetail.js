@@ -47,9 +47,9 @@ function CardDetail({ cardId, notes, onSaveNotes }) {
       </div>
 
       {/* Card Info */}
-      <div className="card-detail-info">
-        <span className="card-detail-type">{getCardType()}</span>
-        <h1 className="card-detail-name">{card.name}</h1>
+      <div className="page-header-center">
+        <h1 className="page-title">{card.name}</h1>
+        <p className="page-subtitle">{getCardType()}</p>
       </div>
 
       {/* Keywords */}

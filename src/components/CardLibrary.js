@@ -6,6 +6,7 @@ import './CardLibrary.css';
 function CardLibrary({ cardNotes, onCardSelect }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeSection, setActiveSection] = useState('all');
+  const [showTitleMenu, setShowTitleMenu] = useState(false);
 
   const filteredCards = useMemo(() => {
     let cards = TAROT_CARDS;
@@ -39,6 +40,32 @@ function CardLibrary({ cardNotes, onCardSelect }) {
 
   return (
     <div className="card-library fade-in">
+      <div className="page-header">
+        <div className="title-menu-anchor">
+          <h1 className="page-title page-title-tappable" onClick={() => setShowTitleMenu(!showTitleMenu)}>
+            Card Library
+            <svg className="title-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </h1>
+          {showTitleMenu && (
+            <>
+              <div className="title-menu-backdrop" onClick={() => setShowTitleMenu(false)} />
+              <div className="title-menu">
+                <button className="title-menu-item" onClick={() => setShowTitleMenu(false)}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" x2="12" y1="15" y2="3" />
+                  </svg>
+                  Export My Notes
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+
       {/* Search Bar */}
       <div className="search-container">
         <svg className="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

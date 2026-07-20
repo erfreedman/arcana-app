@@ -2,18 +2,17 @@
   padding-bottom: var(--space-xl);
 }
 
-.folder-view-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-lg);
+.folder-rename-inline {
+  width: 100%;
 }
 
-.folder-view-count {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--color-text-muted);
+.folder-rename-inline .section-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
 }
+
 
 /* Empty folder state */
 .empty-folder {

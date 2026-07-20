@@ -131,29 +131,11 @@ function AppContent() {
     }
   };
 
-  const getViewTitle = () => {
-    if (currentView === 'cardDetail' && selectedCardId) {
-      return null;
-    }
-    if (currentView === 'folderView' && selectedFolderId) {
-      const folder = folders.find((f) => f.id === selectedFolderId);
-      return folder?.name || 'Folder';
-    }
-    if (currentView === 'newReading') {
-      return 'New Reading';
-    }
-    if (currentView === 'readingDetail') {
-      return 'Reading';
-    }
-    return null;
-  };
-
   const showBack = currentView !== 'main';
 
   return (
     <div className="app">
       <Header
-        title={getViewTitle()}
         showBack={showBack}
         onBack={handleBack}
         isOnline={isOnline}
@@ -208,6 +190,8 @@ function AppContent() {
             readings={readings.filter((r) => r.folderId === selectedFolderId)}
             onReadingSelect={handleReadingSelect}
             onNewReading={handleNewReading}
+            onRenameFolder={renameFolder}
+            onDeleteFolder={deleteFolder}
           />
         )}
 
