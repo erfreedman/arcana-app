@@ -75,7 +75,7 @@ function ReadingDetail({ reading, onUpdate, onDelete, folders }) {
   }];
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
+    const date = new Date(dateString + 'T00:00:00');
     return date.toLocaleDateString('en-US', {
       weekday: 'long',
       month: 'long',
@@ -105,8 +105,10 @@ function ReadingDetail({ reading, onUpdate, onDelete, folders }) {
 
   const startEditingDate = () => {
     setShowTitleMenu(false);
-    const dateValue = reading.date || reading.createdAt;
-    setEditedDate(dateValue ? dateValue.split('T')[0] : new Date().toISOString().split('T')[0]);
+    const dateValue = reading.date;
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    setEditedDate(dateValue || today);
     setEditingSection('date');
   };
 
@@ -338,7 +340,7 @@ function ReadingDetail({ reading, onUpdate, onDelete, folders }) {
               )}
             </div>
             <time className="reading-detail-date">
-              {formatDate(reading.date || reading.createdAt)}
+              {formatDate(reading.date)}
             </time>
           </>
         )}

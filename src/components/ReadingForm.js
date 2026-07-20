@@ -10,7 +10,10 @@ const createEmptySpread = () => ({
 
 function ReadingForm({ folderId, onSubmit, onCancel }) {
   const [title, setTitle] = useState('');
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  });
   const [spreads, setSpreads] = useState([createEmptySpread()]);
   const [activeDropdown, setActiveDropdown] = useState(null);
 

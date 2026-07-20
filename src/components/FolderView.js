@@ -6,7 +6,7 @@ function FolderView({ folder, readings, onReadingSelect, onNewReading }) {
   const [searchQuery, setSearchQuery] = useState('');
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
+    const date = new Date(dateString + 'T00:00:00');
     return date.toLocaleDateString('en-US', {
       weekday: 'short',
       month: 'short',
@@ -133,7 +133,7 @@ function FolderView({ folder, readings, onReadingSelect, onNewReading }) {
                   {reading.title && (
                     <h3 className="reading-title">{reading.title}</h3>
                   )}
-                  <time className="reading-date">{formatDate(reading.createdAt)}</time>
+                  <time className="reading-date">{formatDate(reading.date)}</time>
                 </div>
 
                 <div className="reading-cards">
