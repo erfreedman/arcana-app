@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import AuthPage from './components/AuthPage';
 import Header from './components/Header';
@@ -36,6 +36,10 @@ function AppContent() {
     updateReading,
     deleteReading: deleteReadingFromDb,
   } = useSupabaseSync(user?.id);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentView, activeTab]);
 
   // Show loading while checking auth
   if (loading) {
@@ -80,7 +84,6 @@ function AppContent() {
     setSelectedReadingId(null);
   };
 
-  // Navigation handlers
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     setCurrentView('main');
