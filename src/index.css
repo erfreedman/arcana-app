@@ -337,3 +337,45 @@ label {
 .tappable-edit:hover {
   border-color: rgba(176, 137, 104, 0.4);
 }
+
+/* Shared search bar */
+.search-container {
+  position: relative;
+  margin-bottom: var(--space-md);
+}
+
+.search-icon {
+  position: absolute;
+  left: var(--space-md);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.search-input {
+  padding-left: calc(var(--space-md) + 28px);
+  padding-right: calc(var(--space-md) + 36px);
+}
+
+.search-clear {
+  position: absolute;
+  right: var(--space-xs);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text-muted);
+}
+
+.search-clear:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}

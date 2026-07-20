@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { getCardById } from '../data/tarotCards';
 import './FolderView.css';
 
 function FolderView({ folder, readings, onReadingSelect, onNewReading }) {
+  const [searchQuery, setSearchQuery] = useState('');
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -13,9 +15,26 @@ function FolderView({ folder, readings, onReadingSelect, onNewReading }) {
     });
   };
 
-  const sortedReadings = [...readings].sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-  );
+  const sortedReadings = useMemo(() => {
+    let filtered = [...readings];
+    const query = searchQuery.trim().toLowerCase();
+    if (query) {
+      filtered = filtered.filter((reading) => {
+        if (reading.title && reading.title.toLowerCase().includes(query)) return true;
+        if (reading.reflection && reading.reflection.toLowerCase().includes(query)) return true;
+        const spreads = reading.spreads || [];
+        return spreads.some((spread) => {
+          if (spread.question && spread.question.toLowerCase().includes(query)) return true;
+          if (spread.interpretation && spread.interpretation.toLowerCase().includes(query)) return true;
+          return (spread.cards || []).some((c) => {
+            const info = getCardById(c.cardId);
+            return info && info.name.toLowerCase().includes(query);
+          });
+        });
+      });
+    }
+    return filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  }, [readings, searchQuery]);
 
   // Get all cards from a reading (handles both old and new format)
   const getAllCards = (reading) => {
@@ -49,10 +68,34 @@ function FolderView({ folder, readings, onReadingSelect, onNewReading }) {
             {readings.length} {readings.length === 1 ? 'reading' : 'readings'}
           </span>
         </div>
-        <button className="btn-primary" onClick={onNewReading}>
+        <button className="btn-small" onClick={onNewReading}>
           + New Reading
         </button>
       </div>
+
+      {/* Search */}
+      {readings.length > 0 && (
+        <div className="search-container">
+          <svg className="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="8" />
+            <path d="M21 21l-4.35-4.35" />
+          </svg>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search this folder..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {searchQuery && (
+            <button className="search-clear" onClick={() => setSearchQuery('')}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+        </div>
+      )}
 
       {readings.length === 0 ? (
         <div className="empty-folder">
@@ -69,6 +112,10 @@ function FolderView({ folder, readings, onReadingSelect, onNewReading }) {
           <button className="btn-primary" onClick={onNewReading}>
             Record a Reading
           </button>
+        </div>
+      ) : sortedReadings.length === 0 ? (
+        <div className="search-empty">
+          <p>No readings match "{searchQuery}"</p>
         </div>
       ) : (
         <div className="readings-list">

@@ -1,12 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { getCardById } from '../data/tarotCards';
 import './ReadingsSection.css';
+import './FolderView.css';
 
-function ReadingsSection({ folders, readings, onFolderSelect, onCreateFolder, onRenameFolder, onDeleteFolder }) {
+function ReadingsSection({ folders, readings, onFolderSelect, onCreateFolder, onRenameFolder, onDeleteFolder, onReadingSelect }) {
   const [isCreating, setIsCreating] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
   const [editingFolderId, setEditingFolderId] = useState(null);
   const [editingName, setEditingName] = useState('');
   const [deletingFolderId, setDeletingFolderId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const searchResults = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return null;
+
+    return readings.filter((reading) => {
+      if (reading.title && reading.title.toLowerCase().includes(query)) return true;
+      if (reading.reflection && reading.reflection.toLowerCase().includes(query)) return true;
+      const spreads = reading.spreads || [];
+      return spreads.some((spread) => {
+        if (spread.question && spread.question.toLowerCase().includes(query)) return true;
+        if (spread.interpretation && spread.interpretation.toLowerCase().includes(query)) return true;
+        return (spread.cards || []).some((c) => {
+          const info = getCardById(c.cardId);
+          return info && info.name.toLowerCase().includes(query);
+        });
+      });
+    }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  }, [searchQuery, readings]);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      weekday: 'short', month: 'short', day: 'numeric', year: 'numeric',
+    });
+  };
+
 
   const handleCreate = () => {
     if (newFolderName.trim()) {
@@ -53,6 +83,80 @@ function ReadingsSection({ folders, readings, onFolderSelect, onCreateFolder, on
           </button>
         )}
       </div>
+
+      {/* Search */}
+      <div className="search-container">
+        <svg className="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="11" cy="11" r="8" />
+          <path d="M21 21l-4.35-4.35" />
+        </svg>
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Search readings..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        {searchQuery && (
+          <button className="search-clear" onClick={() => setSearchQuery('')}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+        )}
+      </div>
+
+      {/* Search results */}
+      {searchResults ? (
+        <div className="readings-list">
+          {searchResults.length === 0 ? (
+            <div className="search-empty">
+              <p>No readings match "{searchQuery}"</p>
+            </div>
+          ) : (
+            searchResults.map((reading) => {
+              const allCards = reading.spreads
+                ? reading.spreads.flatMap((s) => s.cards)
+                : reading.cards || [];
+
+              return (
+                <button
+                  key={reading.id}
+                  className="reading-item card"
+                  onClick={() => onReadingSelect(reading.id, reading.folderId)}
+                >
+                  <div className="reading-item-header">
+                    {reading.title && (
+                      <h3 className="reading-title">{reading.title}</h3>
+                    )}
+                    <time className="reading-date">{formatDate(reading.createdAt)}</time>
+                  </div>
+                  <div className="reading-cards">
+                    {allCards.slice(0, 3).map((card, i) => {
+                      const cardInfo = getCardById(card.cardId);
+                      return (
+                        <span key={i} className="reading-card-chip">
+                          {cardInfo?.name || 'Unknown'}
+                          {card.reversed && ' ↓'}
+                        </span>
+                      );
+                    })}
+                    {allCards.length > 3 && (
+                      <span className="reading-card-chip">
+                        +{allCards.length - 3} more
+                      </span>
+                    )}
+                  </div>
+                  <div className="reading-item-footer">
+                    <span className="view-link">View reading →</span>
+                  </div>
+                </button>
+              );
+            })
+          )}
+        </div>
+      ) : (
+        <>
 
       {/* Create new folder form */}
       {isCreating && (
@@ -187,6 +291,8 @@ function ReadingsSection({ folders, readings, onFolderSelect, onCreateFolder, on
           </div>
         ))}
       </div>
+        </>
+      )}
     </div>
   );
 }

@@ -192,6 +192,10 @@ function AppContent() {
             onCreateFolder={createFolder}
             onRenameFolder={renameFolder}
             onDeleteFolder={deleteFolder}
+            onReadingSelect={(readingId, folderId) => {
+              setSelectedFolderId(folderId);
+              handleReadingSelect(readingId);
+            }}
           />
         )}
 
