@@ -51,6 +51,12 @@ export const readingsService = {
     if (updates.cards !== undefined) {
       updateData.cards = updates.cards;
     }
+    if (updates.date !== undefined) {
+      updateData.reading_date = updates.date;
+    }
+    if (updates.folderId !== undefined) {
+      updateData.folder_id = updates.folderId;
+    }
 
     const { data, error } = await supabase
       .from('readings')
