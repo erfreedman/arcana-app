@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { getCardById, getMajorArcana, getCardsBySuit } from '../data/tarotCards';
 import { getCardImageUrl } from '../data/cardImages';
+import { exportSingleReading } from '../utils/export';
 import './ReadingDetail.css';
 
 const createEmptySpread = () => ({
@@ -335,7 +336,11 @@ function ReadingDetail({ reading, onUpdate, onDelete, folders }) {
                       </svg>
                       Move to...
                     </button>
-                    <button className="title-menu-item" onClick={() => setShowTitleMenu(false)}>
+                    <button className="title-menu-item" onClick={() => {
+                      setShowTitleMenu(false);
+                      const folder = (folders || []).find((f) => f.id === reading.folderId);
+                      exportSingleReading(reading, folder?.name);
+                    }}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                         <polyline points="7 10 12 15 17 10" />
